@@ -1,0 +1,595 @@
+{
+  "name": "eCommerce skill",
+  "intents": [
+    {
+      "intent": "simpsons",
+      "examples": [
+        {
+          "text": "homero simpsons"
+        },
+        {
+          "text": "lisa necesita frenos"
+        },
+        {
+          "text": "plan dental"
+        },
+        {
+          "text": "Yo no entendí bien la película"
+        },
+        {
+          "text": "la policía sabia que asuntos internos les tendía una trampa"
+        },
+        {
+          "text": "simpsons"
+        }
+      ],
+      "description": "dialogos simpsons"
+    },
+    {
+      "intent": "api",
+      "examples": [
+        {
+          "text": "rest_api"
+        },
+        {
+          "text": "rest api test"
+        },
+        {
+          "text": "api"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "ayuda",
+      "examples": [
+        {
+          "text": "no anda"
+        },
+        {
+          "text": "que puedo hacer"
+        },
+        {
+          "text": "no funciona"
+        },
+        {
+          "text": "ayuda"
+        },
+        {
+          "text": "necesito ayuda"
+        },
+        {
+          "text": "por favor, ayuda"
+        },
+        {
+          "text": "como tengo que hacer"
+        }
+      ],
+      "description": "ayuda / soporte tecnico"
+    },
+    {
+      "intent": "politica",
+      "examples": [
+        {
+          "text": "macri gato"
+        },
+        {
+          "text": "cristina chorra"
+        },
+        {
+          "text": "macri chorro"
+        },
+        {
+          "text": "kretina"
+        },
+        {
+          "text": "macri"
+        },
+        {
+          "text": "kirchner"
+        }
+      ],
+      "description": "frases mal intesionadas sobre politica"
+    },
+    {
+      "intent": "thank_you",
+      "examples": [
+        {
+          "text": "thank you"
+        },
+        {
+          "text": "thanks"
+        },
+        {
+          "text": "agradecido"
+        },
+        {
+          "text": "muchas gracias"
+        },
+        {
+          "text": "gracias"
+        }
+      ]
+    },
+    {
+      "intent": "good_bye",
+      "examples": [
+        {
+          "text": "hasta luego"
+        },
+        {
+          "text": "chau"
+        },
+        {
+          "text": "nos vemos"
+        },
+        {
+          "text": "chaucha"
+        },
+        {
+          "text": "me voy"
+        },
+        {
+          "text": "me voy llendo"
+        },
+        {
+          "text": "chauchaa"
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "puteada",
+      "examples": [
+        {
+          "text": "hijo de puta"
+        },
+        {
+          "text": "trolo"
+        },
+        {
+          "text": "puto"
+        },
+        {
+          "text": "gil"
+        },
+        {
+          "text": "putaso"
+        },
+        {
+          "text": "gil de goma"
+        },
+        {
+          "text": "cornudo"
+        },
+        {
+          "text": "gato"
+        },
+        {
+          "text": "boludaso"
+        },
+        {
+          "text": "pelotudo"
+        }
+      ],
+      "description": "cuando te putean por nada"
+    },
+    {
+      "intent": "greetings",
+      "examples": [
+        {
+          "text": "hla"
+        },
+        {
+          "text": "hola buenos dias"
+        },
+        {
+          "text": "buenas noches"
+        },
+        {
+          "text": "buenas tardes"
+        },
+        {
+          "text": "buenos dias"
+        },
+        {
+          "text": "como va?"
+        },
+        {
+          "text": "hola"
+        },
+        {
+          "text": "buenas"
+        }
+      ],
+      "description": "Hola !"
+    },
+    {
+      "intent": "horario",
+      "examples": [
+        {
+          "text": "horario de cierre"
+        },
+        {
+          "text": "horario de apertura"
+        },
+        {
+          "text": "hora de apertura"
+        },
+        {
+          "text": "hora de cierre"
+        },
+        {
+          "text": "a que hora cierra"
+        },
+        {
+          "text": "a que hora abre"
+        },
+        {
+          "text": "cuales son los horarios"
+        },
+        {
+          "text": "horarios"
+        },
+        {
+          "text": "horario"
+        }
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "entity": "location",
+      "values": [
+        {
+          "type": "patterns",
+          "value": "(Buenos Aires)",
+          "patterns": [
+            "Buenos Aires",
+            "Bs. As.",
+            "buenosaires",
+            "bs as",
+            "bs.as."
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    }
+  ],
+  "language": "es",
+  "metadata": {
+    "api_version": {
+      "major_version": "v1",
+      "minor_version": "2018-09-20"
+    }
+  },
+  "skill_id": "faf422ec-553a-4d76-af27-fadaa10da592",
+  "description": "lab for watson assistant",
+  "dialog_nodes": [
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_5_1564422714469",
+      "event_name": "focus",
+      "dialog_node": "handler_7_1564422714469",
+      "previous_sibling": "handler_6_1564422714469"
+    },
+    {
+      "type": "event_handler",
+      "parent": "slot_5_1564422714469",
+      "event_name": "input",
+      "dialog_node": "handler_6_1564422714469"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Gracias !"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "En otras cosas",
+      "metadata": {},
+      "conditions": "#thank_you",
+      "dialog_node": "node_2_1564419111663",
+      "previous_sibling": "node_1_1564418981293"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Chau cha !"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "En otras cosas",
+      "metadata": {},
+      "conditions": "#good_bye",
+      "dialog_node": "node_3_1564419178847",
+      "previous_sibling": "node_2_1564419111663"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Perfecto ! Contame que dias y horarios tenes preferencias y despues te contactaremos para agendar una reunion."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "En otras cosas",
+      "metadata": {},
+      "conditions": "#Customer_Care_Appointments",
+      "dialog_node": "node_1_1564418981293"
+    },
+    {
+      "type": "slot",
+      "parent": "node_4_1564419655830",
+      "dialog_node": "slot_5_1564422714469"
+    },
+    {
+      "type": "standard",
+      "title": "poliqueros",
+      "output": {
+        "generic": [
+          {
+            "title": "macri",
+            "options": [
+              {
+                "label": "macri",
+                "value": {
+                  "input": {
+                    "text": "gato"
+                  }
+                }
+              },
+              {
+                "label": "cristina",
+                "value": {
+                  "input": {
+                    "text": "turra"
+                  }
+                }
+              },
+              {
+                "label": "delcaño",
+                "value": {
+                  "input": {
+                    "text": "po"
+                  }
+                }
+              }
+            ],
+            "response_type": "option"
+          }
+        ]
+      },
+      "conditions": "#politica",
+      "dialog_node": "node_5_1566778078369",
+      "previous_sibling": "node_10_1566778262381"
+    },
+    {
+      "type": "frame",
+      "title": "puteadas",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "igualmente !!"
+              },
+              {
+                "text": "vos más !"
+              },
+              {
+                "text": "que te re-contra !"
+              },
+              {
+                "text": "cornudo !"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "random"
+          }
+        ]
+      },
+      "conditions": "#puteada",
+      "digress_in": "does_not_return",
+      "dialog_node": "node_7_1566591710058",
+      "previous_sibling": "Bienvenido"
+    },
+    {
+      "type": "standard",
+      "title": "simsons",
+      "output": {
+        "generic": [
+          {
+            "title": "Yo no entendí bien la película",
+            "options": [
+              {
+                "label": "Yo no entendí bien la película",
+                "value": {
+                  "input": {
+                    "text": "¿la policía sabia que asuntos internos les tendía una trampa?"
+                  }
+                }
+              },
+              {
+                "label": "lisa necesita frenos",
+                "value": {
+                  "input": {
+                    "text": "lisa_frenos"
+                  }
+                }
+              }
+            ],
+            "response_type": "option"
+          },
+          {
+            "title": "homero",
+            "source": "/img/tabla.gif",
+            "description": "homero",
+            "response_type": "image"
+          }
+        ]
+      },
+      "conditions": "#simpsons",
+      "dialog_node": "node_10_1566778262381",
+      "previous_sibling": "node_10_1567018937430"
+    },
+    {
+      "type": "standard",
+      "title": "En otras cosas",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "No le he entendido. Intente reformular la consulta."
+              },
+              {
+                "text": "¿Puede expresarse con otras palabras? No le he entendido."
+              },
+              {
+                "text": "No entendí el significado."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "metadata": {},
+      "conditions": "anything_else",
+      "dialog_node": "En otras cosas",
+      "previous_sibling": "node_4_1564419655830"
+    },
+    {
+      "type": "standard",
+      "title": "ayuda",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "*API={/conceptos/api?pais=613&numero=85000}"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "#api",
+      "dialog_node": "node_3_1566772459885",
+      "previous_sibling": "node_7_1566591710058"
+    },
+    {
+      "type": "standard",
+      "title": "Bienvenido",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Hola. Mi nombre es Miguel, soy un asistente virtual y estoy para ayudarte a buscar los productos que necesitas. Contame un poco que andas buscando"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "metadata": {},
+      "conditions": "#greetings",
+      "dialog_node": "Bienvenido",
+      "previous_sibling": "node_5_1566778078369"
+    },
+    {
+      "type": "frame",
+      "title": "horario",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Nuestro horario es de 10:00hs a 18:00hs de Lunes a Viernes."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "metadata": {},
+      "conditions": "#horario",
+      "digress_in": "does_not_return",
+      "dialog_node": "node_4_1564419655830",
+      "digress_out": "allow_all",
+      "previous_sibling": "node_3_1566772459885",
+      "digress_out_slots": "not_allowed"
+    },
+    {
+      "type": "standard",
+      "title": "OPCIONES",
+      "output": {
+        "generic": [
+          {
+            "title": "help 1 ",
+            "options": [
+              {
+                "label": "ayuda con simpsons",
+                "value": {
+                  "input": {
+                    "text": "simpsons"
+                  }
+                }
+              },
+              {
+                "label": "ayuda maquinas",
+                "value": {
+                  "input": {
+                    "text": "puto"
+                  }
+                }
+              }
+            ],
+            "description": "ss",
+            "response_type": "option"
+          }
+        ]
+      },
+      "conditions": "#ayuda",
+      "dialog_node": "node_10_1567018937430"
+    }
+  ],
+  "workspace_id": "faf422ec-553a-4d76-af27-fadaa10da592",
+  "counterexamples": [],
+  "system_settings": {
+    "tooling": {
+      "store_generic_responses": true
+    }
+  },
+  "learning_opt_out": false,
+  "status": "Available"
+}

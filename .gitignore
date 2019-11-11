@@ -1,0 +1,12 @@
+# dependencies
+/node_modules
+node_modules/*.*
+
+# production
+/build
+/dist
+dist/*.html
+dist/*.js
+dist/*.css
+dist/*.map
+.cache

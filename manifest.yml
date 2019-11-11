@@ -1,0 +1,8 @@
+---
+applications:
+- name: jym-webpage
+  command: npm run bluemix
+  host: jym-webpage
+  domain: mybluemix.net
+  memory: 1024M
+  timeout: 180

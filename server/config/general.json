@@ -1,0 +1,24 @@
+{
+    "nombre":"Waiboc | chatbots e integracion digital",
+    "descripcion":"Waiboc | Chatbots e integracion digital",
+    "urlEmpresa":"https://www.Waiboc.com",
+    "email":{
+        "emailEmpresa":"sebaeze@gmail.com",
+        "emailSoporte":"sebaeze@gmail.com",
+        "emailGateway":"echatbotbackend@gmail.com",
+        "passwordEmailGateway":"qaz11qaz",
+        "nombreMuestraEmailGateway":"eChatbot"
+    },
+    "database":{
+        "dev":{
+            "type":"mongodb",
+            "url":"mongodb://localhost:27017",
+            "database":"Waibocdev"
+        },
+        "produccion":{
+            "type":"mongodb",
+            "url":"mongodb://sebaeze:qaz11qaz@66.97.39.81:20017",
+            "database":"Waiboc"
+        }
+    }
+}

@@ -1,0 +1,70 @@
+{
+  "empresa":{
+    "whatsapp":"5491165562347",
+    "telefono":"+5411-4923-3717",
+    "direccion":"Av. José María Moreno 1767",
+    "ciudad":"Capital Federal, Bs. As., Argentina",
+    "emailEmpresa":"jym.allgraphics@gmail.com",
+    "urlFacebook":"https://es-la.facebook.com/jymallgraphic/",
+    "urlInstagram":"https://www.instagram.com/jymallgraphics/",
+    "urlYoutube":"https://www.youtube.com/channel/UC88Aoi5NwCaRQdFNaGttUFw/videos?view=0&sort=dd&shelf_id=0"
+  },
+  "marcasTiposModelos":{
+    "marcas": {
+      "descripcion":"Marcas",
+      "datos": ["Sindoh","Lexmark","Oki","Hp","Pantum","Brother","Ricoh","Xerox","Kyocera","Panasonic"]
+    },
+    "tipos": {
+      "descripcion":"Tipos",
+      "datos": ["Impresoras","Fotocopiadoras"]
+    },
+    "estados": {
+      "descripcion":"Estados",
+      "datos": ["Equipos Nuevos","Equipos Usados"]
+    },
+    "insumos": {
+      "descripcion":"Insumos",
+      "datos": ["Insumos Originales","Insumos Alternativos"]
+    }
+  },
+  "DEFAULT":{
+    "title":"JYM ALL GRAPHICS | Impresoras, Fotocopiadoras e Insumos",
+    "description":"JYM ALL GRAPHICS: Venta de equipos nuevos y reacondicionados, impresoras, fotocopiadoras e insumos. Distribuidor oficial Sindoh.",
+    "canonical":"https://www.jymallgraphics.com.ar",
+    "meta": {
+        "charset": "utf-8",
+        "name": {
+          "idPagina": "SINDOH",
+          "copyright": "www.jymallgraphics.com.ar",
+          "keywords": "impresoras fotocopiadoras insumo distribuidor oficial sindoh",
+          "og:title": "JYM ALL GRAPHICS: Venta de equipos nuevos y reacondicionados, impresoras, fotocopiadoras e insumos. Distribuidor oficial Sindoh.",
+          "og:url": "https://www.jymallgraphics.com.ar",
+          "og:type":"article",
+          "og:image": "/img/favicon.ico",
+          "og:description": "JYM ALL GRAPHICS: Venta de equipos nuevos y reacondicionados, impresoras, fotocopiadoras e insumos. Distribuidor oficial Sindoh.",
+          "Revisit":"7 days",
+          "robots":"all"
+        }
+    }
+  },
+  "PRODUCTOS":{
+    "title":"JYM ALL GRAPHICS | Productos",
+    "description":"JYM ALL GRAPHICS: Venta de equipos nuevos y reacondicionados, impresoras, fotocopiadoras e insumos. Distribuidor oficial Sindoh.",
+    "canonical":"https://www.jymallgraphics.com.ar",
+    "meta": {
+        "charset": "utf-8",
+        "name": {
+          "idPagina": "PRODUCTOS",
+          "copyright": "www.jymallgraphics.com.ar",
+          "keywords": "productos impresoras fotocopiadoras insumo HP Xerox Lexmark Pantium Oki Brother Kyocera Ricoh Aternativo Panasonic ",
+          "og:title": "JYM ALL GRAPHICS: Venta de equipos nuevos y reacondicionados, impresoras, fotocopiadoras e insumos. Distribuidor oficial Sindoh.",
+          "og:url": "https://www.jymallgraphics.com.ar",
+          "og:type":"article",
+          "og:image": "/img/favicon.ico",
+          "og:description": "JYM ALL GRAPHICS: Venta de equipos nuevos y reacondicionados, impresoras, fotocopiadoras e insumos. Distribuidor oficial Sindoh.",
+          "Revisit":"7 days",
+          "robots":"all"
+        }
+    }
+  }
+}
