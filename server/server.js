@@ -3,6 +3,7 @@
 */
 const express          = require('express');
 const app              = express();
+const fs               = require('fs') ;
 const bodyParser       = require('body-parser') ;
 const cookieParser     = require('cookie-parser')   ;
 const session          = require('express-session') ;
