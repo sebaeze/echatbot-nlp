@@ -1,0 +1,12 @@
+
+
+* ibmcloud cf map-route webpage-sindoh waiboc.com --hostname www
+* ibmcloud cf map-route webpage-sindoh waiboc.com
+
+* Login webhost linux
+* cd /git/certbot
+
+
+
+
+./certbot-auto certonly --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory --email sebaeze@gmail.com --domains *.waiboc.com --domains waiboc.com --no-bootstrap
