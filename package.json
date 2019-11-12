@@ -45,11 +45,9 @@
   },
   "scripts": {
     "build": "webpack  --mode production --config webpack.react.prod.js",
-    "buildProd": "export AMBIENTE=produccion && export URL_BACKEND=http://66.97.39.81:3001 && webpack  --mode production --config webpack.react.prod.js",
-    "startProd": "export AMBIENTE=produccion && export URL_BACKEND=http://66.97.39.81:3001 && node ./server/server.js",
+    "buildProd": "export AMBIENTE=produccion && export URL_BACKEND=https://www.waiboc.com:3001 && webpack  --mode production --config webpack.react.prod.js",
     "start": "babel-node ./server/server.js",
-    "start:react": "webpack-dev-server --config webpack.react.dev.js",
-    "testNlp": "babel-node ./test/tnlp.js"
+    "start:react": "webpack-dev-server --config webpack.react.dev.js"
   },
   "browserslist": [
     ">0.2%",
