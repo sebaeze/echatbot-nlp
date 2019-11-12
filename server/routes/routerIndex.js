@@ -14,8 +14,6 @@ let opciones = {
       res.header("Access-Control-Allow-Headers", "X-Requested-With");
       res.header('Access-Control-Allow-Headers', 'Content-Type');
       res.set('Connection', 'Keep-Alive') ;
-      console.dir(argPath) ;
-      console.dir(argStat) ;
       }
   } ;
 /*
