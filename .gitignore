@@ -3,10 +3,10 @@
 node_modules/*.*
 
 # production
-# /build
-# /dist
-# dist/*.html
-# dist/*.js
-# dist/*.css
-# dist/*.map
+/build
+/dist
+dist/*.html
+dist/*.js
+dist/*.css
+dist/*.map
 .cache
