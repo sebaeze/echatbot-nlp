@@ -13,6 +13,8 @@ import configuracionApp   from './config/general.json' ;
 console.dir(configuracionApp) ;
 //
 if ( !process.env.AMBIENTE ){ process.env.AMBIENTE="dev"; }
+process.env.AMBIENTE      = String(process.env.AMBIENTE).trim() ;
+process.env.PUERTO_WIDGET = String(process.env.PUERTO_WIDGET).trim() ;
 //
 let configDb = configuracionApp.database[process.env.AMBIENTE ||'dev'] ;
 const db               = dbClass( configDb ) ;
