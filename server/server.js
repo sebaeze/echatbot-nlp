@@ -83,6 +83,7 @@ try {
     if ( process.env.AMBIENTE=='produccion' ){
       var privateKey  = fs.readFileSync( path.join(__dirname,'./cert/waiboc.com.privkey.pem') );
       var certificate = fs.readFileSync( path.join(__dirname,'./cert/waiboc.com.cert.pem') );
+      console.log('....voy a iniciar en puerto: '+puerto+';')
       https.createServer({
           key: privateKey,
           cert: certificate
