@@ -17,7 +17,6 @@ console.dir(configuracionApp) ;
 //
 if ( !process.env.AMBIENTE ){ process.env.AMBIENTE="dev"; }
 process.env.AMBIENTE      = String(process.env.AMBIENTE).trim() ;
-process.env.PUERTO_WIDGET = String(process.env.PUERTO_WIDGET).trim() ;
 //
 let configDb = configuracionApp.database[process.env.AMBIENTE ||'dev'] ;
 const db               = dbClass( configDb ) ;
@@ -29,7 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({ name:'mlsess',secret: 'wsx22wsx',cookie: {path: '/',httpOnly: true,maxAge: 6000000 },proxy: true, resave: true,saveUninitialized: true, store: new MemoryStore() }));
 //
-const puerto          = process.env.PUERTO_WIDGET || 3001  ;
+const puerto          = process.env.PUERTO_WIDGET ? String(process.env.PUERTO_WIDGET).trim() : 3001  ;
 const routerIndex     = require( './routes/routerIndex' )     ;
 const routerChatbot   = require( './routes/routerChatbot' )   ;
 const routerErrores   = require( './routes/routerErrores'   ) ;
