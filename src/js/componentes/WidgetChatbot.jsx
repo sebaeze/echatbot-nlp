@@ -18,6 +18,7 @@ class WidgetChatbot extends Component {
     this.chatOpenedHandler     = this.chatOpenedHandler.bind(this) ;
     this.chatClosedHandler     = this.chatClosedHandler.bind(this) ;
     this.mensajePrevio         = { input: { text: "" } } ;
+    this.idConversation        = false ;
   }
   //
   componentDidMount(){
@@ -94,11 +95,18 @@ class WidgetChatbot extends Component {
     *   __URL_BACKEND__: Es generada por webpack en momento del Build
     */
     toggleMsgLoader();
-    fetchChatbot({idAgente: this.props.configuration.idAgent,input:{text:newMessage} })
+    fetchChatbot({idAgente: this.props.configuration.idAgent,_id: this.idConversation,input:{text:newMessage} })
       .then((respBot)=>{
+          if ( respBot._id ){
+            this.idConversation = respBot._id ;
+          } else {
+            console.log('****ERROR: Falta _id en respuesta: ') ;
+            console.dir(respBot) ;
+          }
           renderCustomComponent( CustomReply.bind(this) ,
                     {
-                      datos: respBot, onClickOpcion:this.onClickOpcion.bind(this) ,
+                      datos: respBot ,
+                      onClickOpcion:this.onClickOpcion.bind(this) ,
                       windowStyle: this.props.configuration.windowStyle,
                       addMsg:addResponseMessage.bind(this) ,
                       onOpen: this.chatOpenedHandler ,

@@ -3,6 +3,7 @@
 */
 const router                    = require('express').Router()   ;
 import { assistantManager }     from '../chatbot/chatbot' ;
+import { userNavigator    }     from '../db/modelos/schemaConversations' ;
 //
 module.exports = (argConfig,argDb) => {
     //
@@ -34,7 +35,18 @@ module.exports = (argConfig,argDb) => {
           })
           .then((resuBot)=>{
             let tempRespuesta = resuBot.answer ? {output: {...resuBot.answer}} : {output: { type: 'text', answer: ['No hay polque, no respuesta'] } } ;
-            res.json( tempRespuesta ) ;
+            let tempUserNavigator = {...userNavigator} ;
+            tempUserNavigator     = Object.assign(tempUserNavigator,req.headers) ;
+            tempUserNavigator.ip  = req.ip || '' ;
+            //
+            return  argDb.conversacion.add(tempUserNavigator,{
+              _id: req.body._id ? req.body._id : false,
+              userMessage: req.body.input,
+              answer: tempRespuesta
+            }) ;
+          })
+          .then((resuAnswer)=>{
+            res.json( resuAnswer ) ;
           })
           .catch(err => {
             console.log(err)

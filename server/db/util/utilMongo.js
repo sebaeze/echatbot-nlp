@@ -57,7 +57,7 @@ const promiseFindById = (docModel,docElem,argArrayBorrar=['ts_ingreso','ts_baja'
                 }.bind(this));
             }
             //
-        } catch(errProFU){ console.log('ERROR: docElem: '); console.dir(docElem); respRech(errProFU); }
+        } catch(errProFU){ console.log('ERROR: docElem: '); console.dir(docElem); console.dir(errProFU); respRech(errProFU); }
     }.bind(this)) ;
 } ;
 //
@@ -110,7 +110,7 @@ const promiseFindUpdate = (docModel,docElem,argArrayBorrar=['ts_ingreso','ts_baj
                   }.bind(this));
             } else {
                 console.dir(docElem);
-                doc = new docModel(docElem) ;
+                var doc = new docModel(docElem) ;
                 doc.save(function(errSave,docSave){
                     if ( errSave ){ respRech(errSave); }
                     else{
@@ -119,7 +119,7 @@ const promiseFindUpdate = (docModel,docElem,argArrayBorrar=['ts_ingreso','ts_baj
                 }.bind(this));
             }
             //
-        } catch(errProFU){ console.log('ERROR: docElem: '); console.dir(docElem); respRech(errProFU); }
+        } catch(errProFU){ console.log('ERROR: docElem: '); console.dir(docElem); console.dir(errProFU); respRech(errProFU); }
     }.bind(this)) ;
 } ;
 //

@@ -13,7 +13,7 @@ const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 export class CustomReply extends React.Component {
     constructor(props){
         super(props) ;
-        this.state          = { flagMount: false, answerAssistant: this.props.datos.output } ;
+        this.state          = { flagMount: false, answerAssistant: this.props.datos.answer ? this.props.datos.answer.output : this.props.datos.output } ;
         this.wrapAnswer     = this.wrapAnswer.bind(this) ;
         this.apiUrlFromText = this.apiUrlFromText.bind(this) ;
     } ;
