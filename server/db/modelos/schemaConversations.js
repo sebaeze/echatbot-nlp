@@ -10,6 +10,7 @@ export const userNavigator = { ts_creation:'', ts_last_update:'' ,ip:'', 'user-a
 //
 module.exports = new Schema({
     _id: { type: Schema.ObjectId, auto: true },
+    idchatbot: { type: String, default:'' },
     userInfo: { type: Schema.Types.Mixed ,default: {email:'',name:'',lastName:'',phone:'',facebook:'',instagram:'',country:'',idUser:''} } ,
     userNavigator: { type: [Schema.Types.Mixed] ,default: [] },
     conversationFormat: {type: String, uppercase: true, default:'TYPE1', enum:['TYPE1','TYPE2'] },
