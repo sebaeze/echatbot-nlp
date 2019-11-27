@@ -4,7 +4,7 @@
 import React, { Component }                                      from 'react'  ;
 import { Widget, addResponseMessage, renderCustomComponent, toggleMsgLoader }     from 'react-chat-widget'  ;
 import { CustomReply  }                                          from './CustomReply'       ;
-import { fetchChatbot }                                          from '../api/api' ;
+import { fetchChatbot, getIdConversation }                       from '../api/api' ;
 //
 import 'react-chat-widget/lib/styles.css' ;
 import '../../css/estiloChat.css' ;
@@ -12,18 +12,31 @@ import '../../css/estiloChat.css' ;
 class WidgetChatbot extends Component {
   constructor(props) {
     super(props) ;
-    this.state                 = {pendientes: 1, chatOpen: false} ;
+    this.state                 = {pendientes: 1, chatOpen: false, idConversation: false } ;
     this.handleNewUserMessage  = this.handleNewUserMessage.bind(this) ;
     this.onClickOpcion         = this.onClickOpcion.bind(this) ;
     this.chatOpenedHandler     = this.chatOpenedHandler.bind(this) ;
     this.chatClosedHandler     = this.chatClosedHandler.bind(this) ;
     this.mensajePrevio         = { input: { text: "" } } ;
-    this.idConversation        = false ;
+    // this.idConversation        = false ;
   }
   //
   componentDidMount(){
     try {
       toggleMsgLoader();
+      //
+      if ( this.state.idConversation==false ){
+        getIdConversation()
+          .then((respId)=>{
+            this.setState({idConversation: respId.id }) ;
+          })
+          .catch((respErr)=>{
+            console.log('....error en buscar id:: ') ;
+            console.dir(respErr) ;
+          }) ;
+
+      }
+      //
       setTimeout(() => {
         renderCustomComponent( CustomReply.bind(this) ,
                 {
@@ -37,17 +50,7 @@ class WidgetChatbot extends Component {
                 false ) ;
           toggleMsgLoader();
       }, 1500)
-      /*
-      renderCustomComponent( CustomReply.bind(this) ,
-                {
-                  datos: {output:{type:'text',answer:'Hola !'}} ,
-                  onClickOpcion:this.onClickOpcion.bind(this),
-                  addMsg:addResponseMessage.bind(this) ,
-                  onOpen: this.chatOpenedHandler ,
-                  onClose: this.chatClosedHandler
-                },
-                false ) ;
-                */
+      //
     } catch(errDM){
       console.dir(errDM) ;
     }
@@ -95,14 +98,19 @@ class WidgetChatbot extends Component {
     *   __URL_BACKEND__: Es generada por webpack en momento del Build
     */
     toggleMsgLoader();
-    fetchChatbot({idAgente: this.props.configuration.idAgent,_id: this.idConversation,input:{text:newMessage} })
+    fetchChatbot({idAgente: this.props.configuration.idAgent,_id: this.state.idConversation,input:{text:newMessage} })
       .then((respBot)=>{
+        /*
           if ( respBot._id ){
+            if ( this.state.idConversation==false ){
+
+            }
             this.idConversation = respBot._id ;
           } else {
             console.log('****ERROR: Falta _id en respuesta: ') ;
             console.dir(respBot) ;
           }
+          */
           renderCustomComponent( CustomReply.bind(this) ,
                     {
                       datos: respBot ,
@@ -149,7 +157,6 @@ class WidgetChatbot extends Component {
         backgroundColor: 'red'
       }
     } ;
-    console.dir(tempDefaultstyle) ;
     //
     return (
       <div id="idWrapperWidget" style={{...tempDefaultstyle}} >

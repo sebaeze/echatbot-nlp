@@ -3,12 +3,12 @@
 */
 const router                    = require('express').Router()   ;
 import { assistantManager }     from '../chatbot/chatbot' ;
-import { userNavigator    }     from '../db/modelos/schemaConversations' ;
+import { userNavigator }        from 'echatbot-mongodb' ;
 //
 module.exports = (argConfig,argDb) => {
     //
     const chatbotAsistente = assistantManager(argDb) ;
-    router.all('/mensaje', function(req,res,next){
+    router.all('/:seccion', function(req,res,next){
         /*
         *  Este paso funciona para que la comunicacion entre front -> backend no falle por error de CORS
         */
@@ -19,7 +19,7 @@ module.exports = (argConfig,argDb) => {
         //
         next() ;
         //
-      }) ;
+    }) ;
     //
     router.post('/mensaje', function(req,res){
       try {
@@ -39,7 +39,7 @@ module.exports = (argConfig,argDb) => {
             tempUserNavigator     = Object.assign(tempUserNavigator,req.headers) ;
             tempUserNavigator.ip  = req.ip || '' ;
             //
-            return  argDb.conversacion.add(tempUserNavigator,{
+            return  argDb.conversacion.add(req.body.idAgente,tempUserNavigator,{
               _id: req.body._id ? req.body._id : false,
               userMessage: req.body.input,
               answer: tempRespuesta
@@ -53,6 +53,29 @@ module.exports = (argConfig,argDb) => {
             res.status(500) ;
             res.json( err ) ;
           });
+        //
+      } catch(errMsg){
+        res.status(500) ;
+        res.json(errMsg) ;
+      }
+    }) ;
+    //
+    router.get('/chatlog', function(req,res){
+      try {
+        //
+        res.set('access-Control-Allow-Origin'  , '*');
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'content-type');
+        res.setHeader("Access-Control-Allow-Credentials", true);
+        //
+        argDb.conversacion.qry( req.query )
+            .then((arrconversation)=>{
+              res.json(arrconversation) ;
+            })
+            .catch((errConv)=>{
+              res.status(500) ;
+              res.json(errConv) ;
+            }) ;
         //
       } catch(errMsg){
         res.status(500) ;

@@ -10,10 +10,10 @@ const bodyParser       = require('body-parser') ;
 const cookieParser     = require('cookie-parser')   ;
 const session          = require('express-session') ;
 const MemoryStore      = require('session-memory-store')(session);
-const dbClass          = require('./db/dbIndex').bases ;
 //
-import configuracionApp   from './config/general.json' ;
-console.dir(configuracionApp) ;
+//const dbClass          = require('./db/dbIndex').bases ;
+import { bases as dbClass }   from 'echatbot-mongodb' ;
+import configuracionApp       from './config/general.json' ;
 //
 if ( !process.env.AMBIENTE ){ process.env.AMBIENTE="dev"; }
 process.env.AMBIENTE      = String(process.env.AMBIENTE).trim() ;
