@@ -1,10 +1,12 @@
 /*
 *
 */
+/*
 .rcw-message > .rcw-response {
     background-color: black !important;
     color: white !important;
 }
+*/
 .sssssrcw-message div p {
     /* animation: type 4s steps(60, end) !important ; */
     /*
@@ -36,17 +38,27 @@
 /*    */
 .rcw-widget-container {
     z-index: 9999 !important ;
+    max-width: 450px !important ;
 }
-/*
-.rcw-widget-container{
-    bottom: 30% ;
+.rcw-open-launcher:hover {
+  cursor: pointer !important ;
 }
-.rcw-launcher {
-    width: 150px !important ;
-    height: auto !important ;
+/*  */
+@media (max-width: 375px) {
+  .rcw-widget-container {
+    max-width: 375px !important ;
+  }
 }
-.rcw-launcher .rcw-open-launcher {
-    width: 150px !important ;
-    height: auto !important ;
+/*  */
+.ant-carousel .slick-slide {
+  text-align: center !important ;
+  height: 160px !important ;
+  line-height: 160px !important ;
+  background: #364d79 !important ;
+  overflow: hidden !important ;
 }
-*/
+
+.ant-carousel .slick-slide h3 {
+  color: #fff !important ;
+}
+/*  */

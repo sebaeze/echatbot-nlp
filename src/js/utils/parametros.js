@@ -3,6 +3,14 @@
 */
 //
 export const PARAMETROS   = {
+    CHATBOT_STATUS:{
+        ACTIVE: 'ACTIVE',
+        INACTIVE: 'INACTIVE'
+    },
+    BACKEND:{
+        API_CHATBOT: __URL_BACKEND__ + '/chatbot/qry',
+        API_SESSION: __URL_BACKEND__ + '/chatbot/session'
+    },
     SESSION:{
         ID_CONVERSATION:'IDCONVERSATION'
     }

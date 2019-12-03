@@ -2,7 +2,7 @@
 *
 */
 import React                         from 'react' ;
-import { Button, Spin, Icon }        from 'antd'  ;
+import { Button, Spin, Icon, Carousel }        from 'antd'  ;
 import { TableDynamic }              from './table/TableDynamic'  ;
 import { ImageLoader }               from './image/ImageLoader'   ;
 import { DivMessage  }               from './messages/DivMessage' ;
@@ -51,8 +51,15 @@ export class CustomReply extends React.Component {
     wrapAnswer(elemOpt){
         try {
             //
-            const { messageResponseStyle } = this.props ;
+            const ReactRenderDynamic = (argProps) => {
+                return( <div dangerouslySetInnerHTML={{__html: argProps.text}}></div> ) ;
+            } ;
+            //
+            let tempStyleMsg = {backgroundColor: '#E0E6E5',borderRadius: '10px',padding: '15px' } ;
+            const { messageResponseStyle, timestamp } = this.props ;
             let tempStyle = messageResponseStyle ? messageResponseStyle : {} ;
+            let tempTs    = timestamp ? timestamp : new Date().toISOString() ;
+            tempTs        = String(tempTs).substr(0,18) ;
             //
             let outEle ;
             switch( elemOpt.type ){
@@ -72,14 +79,33 @@ export class CustomReply extends React.Component {
                 case 'option':
                     outEle =
                     <div >
-                        <span><u><b>{elemOpt.title}</b></u></span>
+                        <span>{<ReactRenderDynamic text={elemOpt.title} />}</span>
                         {
-                            elemOpt.options.map((elemInner)=>{
+                            elemOpt.options.map((elemInner, elemIdx)=>{
                                 return (
-                                    <Button style={{marginTop:'5px'}} block valueSelected={elemInner.value} onClick={this.props.onClickOpcion}>{elemInner.label}</Button>
+                                    <Button key={elemIdx} style={{marginTop:'5px'}} block
+                                            onClick={ (argEE)=>{ argEE.preventDefault();this.props.onClickOpcion(elemInner.value);} }
+                                    >{elemInner.label}</Button>
                                 )
                             })
                         }
+                    </div> ;
+                break ;
+                case 'carousel':
+                    outEle =
+                    <div style={{width:'350px'}}>
+                        <span>{<ReactRenderDynamic text={elemOpt.title} />}</span>
+                        <Carousel autoplay>
+                        {
+                            elemOpt.options.map((elemInner, elemIdx)=>{
+                                return (
+                                    <div key={elemIdx}>
+                                        <h3>{elemInner.label}</h3>
+                                    </div>
+                                )
+                            })
+                        }
+                        </Carousel>
                     </div> ;
                 break ;
                 default:
@@ -88,7 +114,12 @@ export class CustomReply extends React.Component {
                 break ;
             }
             //  return( <DivMessage refLastM={this.refLastMsg} >{ outEle }</DivMessage> ) ;
-            return( <DivMessage >{ outEle }</DivMessage> ) ;
+            return(
+                <DivMessage>
+                    <p style={{width:'100%',textAlign:'center'}}>{tempTs}</p>
+                    <div style={{...tempStyleMsg}}>{ outEle }</div>
+                </DivMessage>
+                ) ;
             //
         } catch(errTS){
             console.dir(errTS) ;

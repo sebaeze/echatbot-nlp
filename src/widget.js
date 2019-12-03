@@ -4,31 +4,7 @@
 import React                              from "react"      ;
 import ReactDOM                           from "react-dom"  ;
 import WidgetChatbot                      from "./js/componentes/WidgetChatbot" ;
-import {findIdAgente}                     from "./js/utils/utilGenerico"        ;
-//
-window.addEventListener('2222load',function () {
-  //
-  let idBot = findIdAgente() ;
-  if ( !idBot ){
-    console.log('\n\n'+'*'.repeat(50)+'\n Id incorrecto o no especificado\n'+'*'.repeat(50)+'\n') ;
-    return false ;
-  }
-  //
-  initChatbotWidget( {idAgent: idBot} ) ;
-  //
-  /*
-  let idDiv  = "idWidgetChatbot"+new Date().getTime() ;
-  console.log('\n\n.....Iniciando widget eChatbot. Id: '+idBot+' ==> ') ;
-  let divApp = document.getElementById( idDiv ) || false ;
-  if ( !divApp ){
-    divApp    = document.createElement('div') ;
-    divApp.id = idDiv ;
-    document.body.appendChild( divApp ) ;
-  }
-  ReactDOM.render( <WidgetChatbot idAgente={idBot} />, divApp );
-  */
-  //
-});
+import { getChatbotInfo, getIdConversation, PARAMETROS } from "./js/api/api" ;
 //
 const initChatbotWidget = (argConfigBot) => {
   try {
@@ -43,7 +19,30 @@ const initChatbotWidget = (argConfigBot) => {
       document.body.appendChild( divApp ) ;
     }
     //
-    ReactDOM.render( <WidgetChatbot configuration={argConfigBot} />, divApp );
+    getIdConversation(false)
+      .then((respIdConversation)=>{
+        return getChatbotInfo( {idChatbot: argConfigBot.idAgent, idConversation: respIdConversation.id} ) ;
+      })
+      .then((respData)=>{
+        if ( respData.result.validation==PARAMETROS.CHATBOT_STATUS.ACTIVE ){
+          let tempConfig = {...respData.result} ;
+          // Sobreescribe valores de configuracion en DB, por valores indicados localmente
+          for ( let keyConf in argConfigBot ){
+            let valConf = argConfigBot[keyConf] ;
+            if ( valConf && String(valConf).length>0 ){
+              tempConfig[keyConf] = valConf ;
+            }
+          }
+          //
+          ReactDOM.render( <WidgetChatbot configuration={tempConfig} conversation={{idConversation: respData.result.idConversation,chatlog: respData.result.chatlog}} />, divApp ) ;
+          //
+        } else {
+          console.log('....CHATBOT IS NOT VALID ---> "'+respData.result.validation+'"') ;
+        }
+      })
+      .catch((respErr)=>{
+        console.dir(respErr) ;
+      }) ;
     //
   } catch(errICB){
     console.dir(errICB) ;

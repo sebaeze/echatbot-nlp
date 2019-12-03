@@ -2,9 +2,9 @@
 *
 */
 import React, { Component }                                      from 'react'  ;
-import { Widget, addResponseMessage, renderCustomComponent, toggleMsgLoader }     from 'react-chat-widget'  ;
+import { Widget, addResponseMessage, renderCustomComponent, toggleMsgLoader, addUserMessage }     from 'react-chat-widget'  ;
 import { CustomReply  }                                          from './CustomReply'       ;
-import { fetchChatbot, getIdConversation }                       from '../api/api' ;
+import { fetchChatbot }                                          from '../api/api' ;
 //
 import 'react-chat-widget/lib/styles.css' ;
 import '../../css/estiloChat.css' ;
@@ -12,44 +12,45 @@ import '../../css/estiloChat.css' ;
 class WidgetChatbot extends Component {
   constructor(props) {
     super(props) ;
-    this.state                 = {pendientes: 1, chatOpen: false, idConversation: false } ;
+    const { options }  = this.props.configuration ;
+    this.state                 = {
+      pendientes: 1,
+      chatOpen: false,
+      idConversation: this.props.conversation.idConversation,
+      options: options ? {...options} : {botName: '',botSubtitle: '',senderPlaceholder: ''}
+    } ;
     this.handleNewUserMessage  = this.handleNewUserMessage.bind(this) ;
     this.onClickOpcion         = this.onClickOpcion.bind(this) ;
     this.chatOpenedHandler     = this.chatOpenedHandler.bind(this) ;
     this.chatClosedHandler     = this.chatClosedHandler.bind(this) ;
     this.mensajePrevio         = { input: { text: "" } } ;
-    // this.idConversation        = false ;
   }
   //
   componentDidMount(){
     try {
-      toggleMsgLoader();
       //
-      if ( this.state.idConversation==false ){
-        getIdConversation()
-          .then((respId)=>{
-            this.setState({idConversation: respId.id }) ;
-          })
-          .catch((respErr)=>{
-            console.log('....error en buscar id:: ') ;
-            console.dir(respErr) ;
-          }) ;
-
+      if ( this.props.conversation.chatlog.length==0 ){
+        console.log('....voy a llamar a welcome') ;
+        this.handleNewUserMessage( 'WELCOME.INITIAL' ) ;
+      } else {
+        toggleMsgLoader();
+        let tempChatlog = this.props.conversation.chatlog.sort( (a,b)=>{ return a.ts.localeCompare(b.ts); }) ;
+        for (let icl=0; icl<tempChatlog.length; icl++){
+          let objConv = tempChatlog[icl] ;
+          addUserMessage(objConv.userMessage.text) ;
+          renderCustomComponent( CustomReply.bind(this) ,
+                              {
+                                datos: objConv.answer ,
+                                timestamp: objConv.ts,
+                                onClickOpcion:this.onClickOpcion.bind(this),
+                                addMsg: addResponseMessage.bind(this) ,
+                                windowStyle: this.props.configuration.windowStyle,
+                                onOpen: this.chatOpenedHandler ,
+                                onClose: this.chatClosedHandler
+                              }, false ) ;
+        }
+        toggleMsgLoader() ;
       }
-      //
-      setTimeout(() => {
-        renderCustomComponent( CustomReply.bind(this) ,
-                {
-                  datos: {output:{type:'text',answer:'Hola !'}} ,
-                  onClickOpcion:this.onClickOpcion.bind(this),
-                  addMsg:addResponseMessage.bind(this) ,
-                  windowStyle: this.props.configuration.windowStyle,
-                  onOpen: this.chatOpenedHandler ,
-                  onClose: this.chatClosedHandler
-                },
-                false ) ;
-          toggleMsgLoader();
-      }, 1500)
       //
     } catch(errDM){
       console.dir(errDM) ;
@@ -57,7 +58,6 @@ class WidgetChatbot extends Component {
   }
   //
   chatOpenedHandler(){
-    console.log("opened") ;
     if ( this.state.chatOpen!=true ){
       this.setState({chatOpen: true, pendientes: 0}) ;
     }
@@ -70,22 +70,11 @@ class WidgetChatbot extends Component {
     }
   }
   //
-  onClickOpcion(argEvent){
+  onClickOpcion(argTextSearch){
     try {
-      argEvent.preventDefault() ;
-      let valueSelected = argEvent.target.getAttribute('valueselected') || false ;
-      console.dir(valueSelected) ;
       //
-      if ( valueSelected ){
-        /*
-        api.chatbotMessage( valueSelected, this.props.idAgente )
-            .then((respBotParsed)=>{
-              renderCustomComponent( CustomReply.bind(this) , {tipo:'tabla',datos: respBotParsed, onClickOpcion:this.onClickOpcion.bind(this) }, false ) ;
-            })
-            .catch((errBot)=>{
-              console.dir(errBot) ;
-            }) ;
-            */
+      if ( argTextSearch && argTextSearch.length>0 ){
+        this.handleNewUserMessage( argTextSearch ) ;
       }
       //
     } catch(errOCO){
@@ -100,17 +89,6 @@ class WidgetChatbot extends Component {
     toggleMsgLoader();
     fetchChatbot({idAgente: this.props.configuration.idAgent,_id: this.state.idConversation,input:{text:newMessage} })
       .then((respBot)=>{
-        /*
-          if ( respBot._id ){
-            if ( this.state.idConversation==false ){
-
-            }
-            this.idConversation = respBot._id ;
-          } else {
-            console.log('****ERROR: Falta _id en respuesta: ') ;
-            console.dir(respBot) ;
-          }
-          */
           renderCustomComponent( CustomReply.bind(this) ,
                     {
                       datos: respBot ,
@@ -128,51 +106,35 @@ class WidgetChatbot extends Component {
         toggleMsgLoader();
       }) ;
     //
-    /*
-    let tempUrlBackend = __URL_BACKEND__+'/chatbot/mensaje?idAgente='+this.props.idAgente ;
-    console.log('...tempUrlBackend: '+tempUrlBackend+';') ;
-    fetch( tempUrlBackend ,postOpt)
-            .then(function(response){
-                if (response.status>=200 & response.status<=400) {
-                    return response.json() ;
-                } else {
-                    throw new Error("ERROR: ADD Productos nuevos. Http Status: "+response.status+'.') ;
-                }
-            }.bind(this))
-            .then(function(respNlp   ){
-              renderCustomComponent( CustomReply.bind(this) , {datos: respNlp, onClickOpcion:this.onClickOpcion.bind(this) }, false ) ;
-            }.bind(this))
-            .catch((respRechaz ) => { console.dir(respRechaz) ; }) ;
-            */
-    //
+  }
+  //
+  static getDerivedStateFromProps(newProps, state) {
+    if ( newProps.options && JSON.stringify(newProps.options)!=JSON.stringify(state.options) ){
+      return { options: newProps.options } ;
+    } else {
+      return false ;
+    }
   }
   //
   render() {
     //
-    const { defaultStyle }  = this.props.configuration ;
-    let tempDefaultstyle    = defaultStyle ? defaultStyle : {} ;
-    tempDefaultstyle = {
-      ...tempDefaultstyle,
-      '& .rcwConversationContainer .rcwHeader':{
-        backgroundColor: 'red'
-      }
-    } ;
+    // const { defaultStyle }  = this.props.configuration ;
     //
     return (
-      <div id="idWrapperWidget" style={{...tempDefaultstyle}} >
+      <div id="idWrapperWidget" >
           <Widget
             handleNewUserMessage={this.handleNewUserMessage}
-            title="Soporte"
-            subtitle="En linea"
-            senderPlaceHolder="Escribe un mensaje"
+            title={this.state.options.botName}
+            subtitle={this.state.options.botSubtitle}
+            senderPlaceHolder={this.state.options.senderPlaceholder}
             showCloseButton={true}
             badge={this.state.pendientes}
           />
       </div>
       )
       //
-    }
   }
+}
 /* */
 export default WidgetChatbot ;
 /* */

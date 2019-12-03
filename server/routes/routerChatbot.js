@@ -2,8 +2,8 @@
 *
 */
 const router                    = require('express').Router()   ;
-import { assistantManager }     from '../chatbot/chatbot' ;
 import { userNavigator }        from 'echatbot-mongodb' ;
+import { assistantManager, validateChatbotAgent }     from '../chatbot/chatbot' ;
 //
 module.exports = (argConfig,argDb) => {
     //
@@ -34,16 +34,16 @@ module.exports = (argConfig,argDb) => {
             return asistenteChatbot.process( req.body.input.text ) ;
           })
           .then((resuBot)=>{
+            //console.dir(resuBot) ;
             let tempRespuesta = resuBot.answer ? {output: {...resuBot.answer}} : {output: { type: 'text', answer: ['No hay polque, no respuesta'] } } ;
             let tempUserNavigator = {...userNavigator} ;
             tempUserNavigator     = Object.assign(tempUserNavigator,req.headers) ;
             tempUserNavigator.ip  = req.ip || '' ;
-            //
-            return  argDb.conversacion.add(req.body.idAgente,tempUserNavigator,{
-              _id: req.body._id ? req.body._id : false,
-              userMessage: req.body.input,
-              answer: tempRespuesta
-            }) ;
+            return  argDb.conversacion.add(
+              req.body.idAgente,
+              tempUserNavigator,
+              { _id: req.body._id ? req.body._id : false, userMessage: req.body.input, answer: tempRespuesta, intent: resuBot.intent,domain: resuBot.domain }
+            ) ;
           })
           .then((resuAnswer)=>{
             res.json( resuAnswer ) ;
@@ -70,11 +70,41 @@ module.exports = (argConfig,argDb) => {
         //
         argDb.conversacion.qry( req.query )
             .then((arrconversation)=>{
-              res.json(arrconversation) ;
+              res.json({
+                status:0,
+                result: arrconversation
+              }) ;
             })
             .catch((errConv)=>{
               res.status(500) ;
               res.json(errConv) ;
+            }) ;
+        //
+      } catch(errMsg){
+        res.status(500) ;
+        res.json(errMsg) ;
+      }
+    }) ;
+    //
+    router.get('/session', function(req,res){
+      try {
+        //
+        res.set('access-Control-Allow-Origin'  , '*');
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+        res.header('Access-Control-Allow-Headers', 'content-type');
+        res.setHeader("Access-Control-Allow-Credentials", true);
+        //
+        validateChatbotAgent( argDb, req )
+            .then((respCB)=>{
+              res.status(200) ;
+              res.json({
+                status: 0,
+                result: respCB
+              }) ;
+            })
+            .catch((respErr)=>{
+              res.status(500) ;
+              res.json(respErr) ;
             }) ;
         //
       } catch(errMsg){

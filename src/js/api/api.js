@@ -3,6 +3,31 @@
 */
 import { PARAMETROS, opcionesPOST, obj2qryString }       from '../utils/parametros' ;
 import ls                                                from 'local-storage'    ;
+import axios                                             from "axios"      ;
+//
+export { PARAMETROS } ;
+//
+export const getChatbotInfo = (argQry) => {
+    return new Promise(function(respOk,respRech){
+        try {
+            //
+            let tempOpt = {...opcionesPOST} ;
+            tempOpt.method = 'GET' ;
+            tempOpt.url    = PARAMETROS.BACKEND.API_SESSION + '?idChatbot='+argQry.idChatbot+'&idConversation='+argQry.idConversation ;
+            //
+            axios( tempOpt )
+                .then((respData)=>{
+                    respOk( respData.data ) ;
+                })
+                .catch((respErr)=>{
+                    respRech(respErr) ;
+                }) ;
+            //
+        } catch(errFH){
+            respRech(errFH) ;
+        }
+    }) ;
+} ;
 //
 export const fetchChatlog = (argQry) => {
     return new Promise(function(respOk,respRech){
@@ -12,7 +37,7 @@ export const fetchChatlog = (argQry) => {
             getOpt.method = 'GET' ;
             delete  getOpt.body ;
             //
-            let tempUrlBackend = __URL_BACKEND__ + '/chatbot/chatlog' + obj2qryString(argQry) ;
+            let tempUrlBackend = __URL_BACKEND__ + '/chatbot/chatlog' + obj2qryString(argQry)+'&campos=conversation,unsubscribe' ;
             fetch( tempUrlBackend ,getOpt)
                     .then(function(response){
                         if (response.status>=200 & response.status<=400) {
@@ -22,7 +47,8 @@ export const fetchChatlog = (argQry) => {
                         }
                     }.bind(this))
                     .then(function(respNlp   ){
-                        respOk(respNlp) ;
+                        if ( Array.isArray(respNlp.result) ){ respNlp.result=respNlp.result[0]; }
+                        respOk(respNlp.result.conversation) ;
                     }.bind(this))
                     .catch((respRechaz ) => { respRech(respRechaz) ; }) ;
             //
@@ -32,24 +58,32 @@ export const fetchChatlog = (argQry) => {
     }) ;
 } ;
 //
-export const getIdConversation = () => {
+export const getIdConversation = (argFlagChatbot=true) => {
     return new Promise(function(respData,respRech){
         try {
             let idConversation = ls( PARAMETROS.SESSION.ID_CONVERSATION ) || false ;
             if ( idConversation ){
-                fetchChatlog( {_id:idConversation} )
-                    .then((respLog)=>{
-                        respData({id:idConversation, chatLog:respLog}) ;
-                    })
-                    .catch(respRech) ;
+                if ( argFlagChatbot==true ){
+                    fetchChatlog( {_id:idConversation} )
+                        .then((respLog)=>{
+                            respData({id:idConversation, chatLog:respLog}) ;
+                        })
+                        .catch(respRech) ;
+                } else {
+                    respData({id:idConversation}) ;
+                }
             } else {
-                fetchChatbot( {input: {text:'quiero un session ID'}} )
-                    .then((respCB)=>{
-                        idConversation = respCB._id ;
-                        ls( PARAMETROS.SESSION.ID_CONVERSATION, idConversation ) ;
-                        respData({id:idConversation,chatLog:[]}) ;
-                    })
-                    .catch(respRech) ;
+                if ( argFlagChatbot==true ){
+                    fetchChatbot( {input: {text:''}} )
+                        .then((respCB)=>{
+                            idConversation = respCB._id ;
+                            ls( PARAMETROS.SESSION.ID_CONVERSATION, idConversation ) ;
+                            respData({id:idConversation,chatLog:[]}) ;
+                        })
+                        .catch(respRech) ;
+                } else {
+                    respData({id: false}) ;
+                }
             }
         } catch(errGIC){
             console.dir(errGIC) ;

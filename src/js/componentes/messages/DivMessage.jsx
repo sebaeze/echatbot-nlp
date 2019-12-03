@@ -37,13 +37,10 @@ export class DivMessage extends React.Component {
     //
     render(){
         //
-        /*
-        console.dir(this.props) ;
-        console.dir(this.props.ref) ;
-        */
-        // ref={(el)=>{this.props.refLastM(el); }}
+        const { customStyle } = this.props ;
+        //
         return(
-            <div style={{backgroundColor: '#E0E6E5',borderRadius: '10px',padding: '15px' }} >
+            <div style={{...customStyle}} >
                 <div>
                     { this.props.children }
                 </div>
