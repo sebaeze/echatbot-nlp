@@ -6,6 +6,7 @@ import { Button, Spin, Icon, Carousel }        from 'antd'  ;
 import { TableDynamic }              from './table/TableDynamic'  ;
 import { ImageLoader }               from './image/ImageLoader'   ;
 import { DivMessage  }               from './messages/DivMessage' ;
+import { MessageCarousel }           from './messages/MessageCarousel' ;
 //
 import 'antd/dist/antd.css';
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
@@ -51,10 +52,6 @@ export class CustomReply extends React.Component {
     wrapAnswer(elemOpt){
         try {
             //
-            const ReactRenderDynamic = (argProps) => {
-                return( <div dangerouslySetInnerHTML={{__html: argProps.text}}></div> ) ;
-            } ;
-            //
             let tempStyleMsg = {backgroundColor: '#E0E6E5',borderRadius: '10px',padding: '15px' } ;
             const { messageResponseStyle, timestamp } = this.props ;
             let tempStyle = messageResponseStyle ? messageResponseStyle : {} ;
@@ -92,21 +89,7 @@ export class CustomReply extends React.Component {
                     </div> ;
                 break ;
                 case 'carousel':
-                    outEle =
-                    <div style={{width:'350px'}}>
-                        <span>{<ReactRenderDynamic text={elemOpt.title} />}</span>
-                        <Carousel autoplay>
-                        {
-                            elemOpt.options.map((elemInner, elemIdx)=>{
-                                return (
-                                    <div key={elemIdx}>
-                                        <h3>{elemInner.label}</h3>
-                                    </div>
-                                )
-                            })
-                        }
-                        </Carousel>
-                    </div> ;
+                    outEle = <MessageCarousel  message={elemOpt} /> ;
                 break ;
                 default:
                     console.log('\n\n **** ERROR: response_type desconocido: '+elemOpt.response_type+';') ;

@@ -62,3 +62,33 @@
   color: #fff !important ;
 }
 /*  */
+.waiboc-msg-carousel {
+  width: 380px ;
+}
+.waiboc-msg-carousel .waiboc-arrow {
+  z-index: 9999 ;
+  font-size: 30px ;
+  position: relative ;
+  color: white ;
+  opacity: 0.5 ;
+  top: 90px !important ;
+}
+.waiboc-msg-carousel .waiboc-arrow:hover {
+  opacity: 1 !important ;
+}
+.waiboc-msg-carousel i.waiboc-arrow.waiboc-arrow-left {
+  left: 10px  !important ;
+}
+.waiboc-msg-carousel i.waiboc-arrow.waiboc-arrow-right {
+  right: -310px !important ;
+}
+/*  */
+@media (max-width: 375px) {
+  .waiboc-msg-carousel {
+    width: 330px ;
+  }
+  .waiboc-msg-carousel i.waiboc-arrow.waiboc-arrow-right {
+    right: -260px !important ;
+  }
+}
+/*  */
