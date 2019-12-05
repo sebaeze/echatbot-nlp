@@ -4,6 +4,7 @@
 import React                              from "react"      ;
 import ReactDOM                           from "react-dom"  ;
 import WidgetChatbot                      from "./js/componentes/WidgetChatbot" ;
+import ls                                                from 'local-storage'    ;
 import { getChatbotInfo, getIdConversation, PARAMETROS } from "./js/api/api" ;
 //
 const initChatbotWidget = (argConfigBot) => {
@@ -34,6 +35,7 @@ const initChatbotWidget = (argConfigBot) => {
             }
           }
           //
+          ls( PARAMETROS.SESSION.ID_CONVERSATION, respData.result.idConversation ) ;
           ReactDOM.render( <WidgetChatbot configuration={tempConfig} conversation={{idConversation: respData.result.idConversation,chatlog: respData.result.chatlog}} />, divApp ) ;
           //
         } else {

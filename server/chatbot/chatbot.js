@@ -219,7 +219,6 @@ export const validateChatbotAgent = (argDb,argReq) => {
                     console.dir(arrconversation.websiteDomains) ;
                     flagOk = arrconversation.websiteDomains.find((elemD)=>{ return String(chatbotIpDomain).toUpperCase().indexOf(String(elemD).toUpperCase())!=-1 ; }) ; // || false ;
                 }
-                console.dir(flagOk) ;
                 //
                 chatbotStatus = {
                         idChatbot: idChatbot,
@@ -231,7 +230,6 @@ export const validateChatbotAgent = (argDb,argReq) => {
                         idConversation: '',
                         chatlog: []
                 } ;
-                console.dir(chatbotStatus) ;
                 //
                 return getConversationIdChatlog(argDb,argReq) ;
                 //

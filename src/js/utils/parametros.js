@@ -12,7 +12,7 @@ export const PARAMETROS   = {
         API_SESSION: __URL_BACKEND__ + '/chatbot/session'
     },
     SESSION:{
-        ID_CONVERSATION:'IDCONVERSATION'
+        ID_CONVERSATION:'WAIBOCIDCONVERSATION'
     }
 } ;
 //
