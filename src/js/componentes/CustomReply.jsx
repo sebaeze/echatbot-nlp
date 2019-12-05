@@ -1,8 +1,10 @@
 /*
 *
 */
-import React                         from 'react' ;
+import React                                   from 'react' ;
 import { Button, Spin, Icon, Carousel }        from 'antd'  ;
+import jstz                                    from '../libs/jstz.min.js'
+import moment                                  from 'moment-timezone';
 import { TableDynamic }              from './table/TableDynamic'  ;
 import { ImageLoader }               from './image/ImageLoader'   ;
 import { DivMessage  }               from './messages/DivMessage' ;
@@ -55,8 +57,10 @@ export class CustomReply extends React.Component {
             let tempStyleMsg = {backgroundColor: '#E0E6E5',borderRadius: '10px',padding: '15px' } ;
             const { messageResponseStyle, timestamp } = this.props ;
             let tempStyle = messageResponseStyle ? messageResponseStyle : {} ;
-            let tempTs    = timestamp ? timestamp : new Date().toISOString() ;
-            tempTs        = String(tempTs).substr(0,18) ;
+            //let tempTs    = timestamp ? timestamp : new Date().toISOString() ;
+            // jstz.determine().name()
+            let tempTs    = timestamp ? timestamp : moment( new Date() ).tz(jstz.determine().name()).format() ;
+            tempTs        = String(tempTs).substr(0,18).replace(/([Tt])/g,'') ;
             //
             let outEle ;
             switch( elemOpt.type ){

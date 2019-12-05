@@ -31,8 +31,6 @@ export class MessageCarousel extends React.Component {
             //arrows: true
         } ;
         //
-        console.dir(this.props) ;
-        //
         return(
             <div className="waiboc-msg-carousel">
                 <span>{<ReactRenderDynamic text={this.props.message.title} />}</span>

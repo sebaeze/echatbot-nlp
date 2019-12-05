@@ -30,24 +30,27 @@ class WidgetChatbot extends Component {
     try {
       //
       if ( this.props.conversation.chatlog.length==0 ){
-        console.log('....voy a llamar a welcome') ;
         this.handleNewUserMessage( 'WELCOME.INITIAL' ) ;
       } else {
         toggleMsgLoader();
         let tempChatlog = this.props.conversation.chatlog.sort( (a,b)=>{ return a.ts.localeCompare(b.ts); }) ;
         for (let icl=0; icl<tempChatlog.length; icl++){
           let objConv = tempChatlog[icl] ;
-          addUserMessage(objConv.userMessage.text) ;
-          renderCustomComponent( CustomReply.bind(this) ,
-                              {
-                                datos: objConv.answer ,
-                                timestamp: objConv.ts,
-                                onClickOpcion:this.onClickOpcion.bind(this),
-                                addMsg: addResponseMessage.bind(this) ,
-                                windowStyle: this.props.configuration.windowStyle,
-                                onOpen: this.chatOpenedHandler ,
-                                onClose: this.chatClosedHandler
-                              }, false ) ;
+          if ( objConv.intent  && String(objConv.intent).length>0 ){
+            if ( objConv.userMessage && objConv.userMessage.text && String(objConv.userMessage.text)!="undefined" && objConv.userMessage.text!=objConv.intent ){
+              addUserMessage( String(objConv.userMessage.text) ) ;
+            }
+            renderCustomComponent( CustomReply.bind(this) ,
+                                {
+                                  datos: objConv.answer ,
+                                  timestamp: objConv.ts,
+                                  onClickOpcion:this.onClickOpcion.bind(this),
+                                  addMsg: addResponseMessage.bind(this) ,
+                                  windowStyle: this.props.configuration.windowStyle,
+                                  onOpen: this.chatOpenedHandler ,
+                                  onClose: this.chatClosedHandler
+                                }, false ) ;
+          }
         }
         toggleMsgLoader() ;
       }
@@ -121,7 +124,7 @@ class WidgetChatbot extends Component {
     // const { defaultStyle }  = this.props.configuration ;
     //
     return (
-      <div id="idWrapperWidget" >
+      <div id="WaibocWidgetMain" >
           <Widget
             handleNewUserMessage={this.handleNewUserMessage}
             title={this.state.options.botName}
