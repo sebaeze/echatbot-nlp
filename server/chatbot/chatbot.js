@@ -217,7 +217,7 @@ export const validateChatbotAgent = (argDb,argReq) => {
                     console.log('...../session:: ') ;
                     console.dir(chatbotIpDomain) ;
                     console.dir(arrconversation.websiteDomains) ;
-                    flagOk = arrconversation.websiteDomains.find((elemD)=>{ return String(elemD).toUpperCase().indexOf( chatbotIpDomain )!=-1 ; }) ; // || false ;
+                    flagOk = arrconversation.websiteDomains.find((elemD)=>{ return String(chatbotIpDomain).toUpperCase().indexOf(String(elemD).toUpperCase())!=-1 ; }) ; // || false ;
                 }
                 console.dir(flagOk) ;
                 //
