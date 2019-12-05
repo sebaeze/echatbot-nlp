@@ -1,24 +1,8 @@
 /*
 *
 */
-/*
-.rcw-message > .rcw-response {
-    background-color: black !important;
-    color: white !important;
-}
-*/
-.sssssrcw-message div p {
-    /* animation: type 4s steps(60, end) !important ; */
-    /*
-    -webkit-transition: opacity 300s ease-in-out !important ;
-    -moz-transition: opacity 300s ease-in-out !important ;
-    -ms-transition: opacity 300s ease-in-out !important ;
-    -o-transition: opacity 300s ease-in-out !important ;
-    transition: opacity 300s ease-in-out !important ;
-    */
-    transition: width 2s, height 2s !important;
-    -webkit-transition: width 2s, height 4s !important ;
-    transition-delay: 5s !important ;
+.rcw-message {
+  font-size: 17px !important ;
 }
 /*   */
 .testtt:hover {
