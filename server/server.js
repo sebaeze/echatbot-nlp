@@ -21,7 +21,6 @@ process.env.AMBIENTE      = String(process.env.AMBIENTE).trim() ;
 let configDb = configuracionApp.database[process.env.AMBIENTE ||'dev'] ;
 const db               = dbClass( configDb ) ;
 //
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 //app.use(serveFavicon(path.join(__dirname,'../dist/img/favicon.ico'))) ;
 app.use(cookieParser()) ;
 app.use(bodyParser.json());
