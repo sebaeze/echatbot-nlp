@@ -1,5 +1,3 @@
-# Watson Chatbot trainning
-
 ## Git clone
 ## npm install
 

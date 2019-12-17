@@ -5,7 +5,8 @@ const { NlpManager }            = require('node-nlp')   ;
 import { userNavigator }        from 'echatbot-mongodb' ;
 //
 const cacheSessiones   = {} ;
-const defaultTrainning = [
+/*
+const defaultTraining = [
         {
             "domain":"WELCOME",
             "entity":"WELCOME.INITIAL",
@@ -68,9 +69,10 @@ const defaultTrainning = [
             "examples":["putaso","trolo","hijo de puta","HDP","concha de tu madre",],
             "answer": {type:"image",source:"/img/escribir.gif",alt:"Lo voy a anotar en mi maquina de escribir invisible"}
         },
-	] ;
+    ] ;
+*/
 //
-export const trainAsistente = (argLanguage,argTrainning) => {
+export const trainAsistente = (argLanguage,argTraining) => {
     return new Promise(function(respOk,respRech){
         try {
             const manager = new NlpManager({ languages: ['es', 'en', 'pt'] });
@@ -86,10 +88,10 @@ export const trainAsistente = (argLanguage,argTrainning) => {
             manager.addAnswer('es', 'greeting.hello', 'Todo bien, vos? En que te puedo ayudar ?');
             */
             //
-            if ( !argTrainning || Object.keys(argTrainning).length==0 ||argTrainning==false || argTrainning=='false' ){ console.log('...voy a trainning default');argTrainning=defaultTrainning; }
+            // if ( !argTraining || Object.keys(argTraining).length==0 ||argTraining==false || argTraining=='false' ){ console.log('...voy a Training default');argTraining=defaultTraining; }
             let tempEntity = {} ;
-            for( let ix=0; ix<argTrainning.length;ix++){
-                let objTrain = argTrainning[ix] ;
+            for( let ix=0; ix<argTraining.length;ix++){
+                let objTrain = argTraining[ix] ;
                 if ( !tempEntity[objTrain.domain] ){
                     tempEntity[objTrain.entity] = objTrain.entity ;
                     manager.assignDomain( argLanguage, objTrain.entity , objTrain.domain );
@@ -138,8 +140,8 @@ export const assistantManager = (argDb) => {
                         .then((respAsis)=>{
                             //
                             if ( respAsis.length>0 ){ respAsis=respAsis[0]; }
-                            if ( !respAsis.trainning ){ respAsis.trainning=false; }
-                            cacheSessiones[argIdAgente] = trainAsistente(respAsis.language,respAsis.trainning) ;
+                            if ( !respAsis.training ){ respAsis.training=false; }
+                            cacheSessiones[argIdAgente] = trainAsistente(respAsis.language,respAsis.training) ;
                             //
                             respOk( cacheSessiones[argIdAgente] ) ;
                             //
