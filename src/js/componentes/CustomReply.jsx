@@ -11,7 +11,11 @@ import { DivMessage  }               from './messages/DivMessage' ;
 import { MessageCarousel }           from './messages/MessageCarousel' ;
 //
 import 'antd/dist/antd.css';
-const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+const antIcon     = <Icon type="loading" style={{ fontSize: 24 }} spin />;
+let userTimeZone = jstz.determine().name() ;
+let tempLang     = navigator.language || navigator.languages[0] || 'es' ;
+console.log('....tempLang: ',tempLang) ;
+moment.locale(tempLang) ;
 //
 export class CustomReply extends React.Component {
     constructor(props){
@@ -57,15 +61,24 @@ export class CustomReply extends React.Component {
             let tempStyleMsg = {backgroundColor: '#E0E6E5',borderRadius: '10px',padding: '15px' } ;
             const { messageResponseStyle, timestamp } = this.props ;
             let tempStyle = messageResponseStyle ? messageResponseStyle : {} ;
-            //let tempTs    = timestamp ? timestamp : new Date().toISOString() ;
-            // jstz.determine().name()
-            let tempTs    = timestamp ? timestamp : moment( new Date() ).tz(jstz.determine().name()).format() ;
-            tempTs        = String(tempTs).substr(0,18).replace(/([Tt])/g,'') ;
+            let tempTs    = moment( (timestamp ? timestamp : new Date()) ).tz( userTimeZone ).fromNow() ;
             //
             let outEle ;
             switch( elemOpt.type ){
                 case 'text':
-                    outEle=<p style={{...tempStyle,marginBottom:'0'}}>{elemOpt.answer}</p> ;
+                    if ( elemOpt.text ){
+                        outEle=<p style={{...tempStyle,marginBottom:'0'}}>{elemOpt.text}</p> ;
+                    } else {
+                        if ( elemOpt.answer && elemOpt.answer.length>0 ){
+                            outEle = <p style={{...tempStyle,marginBottom:'0'}}>
+                                {
+                                    elemOpt.answer.map((eleTT,idxTT)=>{
+                                        return( <span key={idxTT}>{eleTT}</span>)
+                                    })
+                                }
+                                </p> ;
+                        }
+                    }
                 break ;
                 case 'image':
                     let custStyle = elemOpt.customStyle ? elemOpt.customStyle : {paddingLeft:'10%',width:'250px',height:'auto'} ;

@@ -89,9 +89,10 @@ export const trainAsistente = (argLanguage,argTraining) => {
             */
             //
             // if ( !argTraining || Object.keys(argTraining).length==0 ||argTraining==false || argTraining=='false' ){ console.log('...voy a Training default');argTraining=defaultTraining; }
-            let tempEntity = {} ;
-            for( let ix=0; ix<argTraining.length;ix++){
-                let objTrain = argTraining[ix] ;
+            let tempArrayTrain = typeof argTraining=="object" ? Object.values(argTraining) : argTraining ;
+            let tempEntity     = {} ;
+            for( let ix=0; ix<tempArrayTrain.length;ix++){
+                let objTrain = tempArrayTrain[ix] ;
                 if ( !tempEntity[objTrain.domain] ){
                     tempEntity[objTrain.entity] = objTrain.entity ;
                     manager.assignDomain( argLanguage, objTrain.entity , objTrain.domain );
