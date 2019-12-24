@@ -15,6 +15,7 @@ Creates and returns  new chatbot Session. Validate if the chatbot is active.
 - git pull
 - npm install
 - pm2 delete waiboc-widget
+- npm update echatbot-mongodb
 - export AMBIENTE=produccion
 - npm run buildProd
 - pm2 start npm --no-automation  --name waiboc-widget  -- run start

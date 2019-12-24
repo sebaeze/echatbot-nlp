@@ -86,9 +86,17 @@ export const trainAsistente = (argLanguage,argTraining) => {
                     manager.assignDomain( argLanguage, objTrain.entity , objTrain.domain );
                 }
                 objTrain.examples.forEach((elemExample)=>{
-                    manager.addDocument( argLanguage , elemExample , objTrain.entity );
+                    try {
+                        manager.addDocument( argLanguage , elemExample , objTrain.entity );
+                    } catch(errADDd){
+                        console.log('....ERROR: addDocumento:: train:: errADDd: ',errADDd,' \n objTrain: ',objTrain) ;
+                    }
                 }) ;
-                manager.addAnswer( argLanguage , objTrain.entity , objTrain.answer );
+                try {
+                    manager.addAnswer( argLanguage , objTrain.entity , objTrain.answer );
+                } catch(errADDd){
+                    console.log('....ERROR: addAnswer:: train:: errADDd: ',objTrain) ;
+                }
             }
             //
             manager.train()
