@@ -36,8 +36,8 @@ const parseImage    = (argAnswer,tempStyle) => {
                               altImg={customAlt}
                               className="" loadingClassName="loading" loadedClassName=""
                               customStyle={{...tempStyle}}
-                              title={elemOpt.title}
-                              alt={elemOpt.description}
+                              title={argAnswer.title}
+                              alt={argAnswer.description}
                 /> ;
     } catch(errPI){
         console.dir(errPI) ;
