@@ -76,18 +76,6 @@ export const trainAsistente = (argLanguage,argTraining) => {
     return new Promise(function(respOk,respRech){
         try {
             const manager = new NlpManager({ languages: ['es', 'en', 'pt'] });
-            //
-            /*
-            manager.assignDomain('es', 'greeting.hello', 'chatty');
-            manager.addDocument('en', 'hola'       , 'greeting.hello');
-            manager.addDocument('es', 'hola'       , 'greeting.hello');
-            manager.addDocument('es', 'como andas?', 'greeting.hello');
-            manager.addDocument('es', 'como andas?', 'greeting.hello');
-            manager.addDocument('es', 'todo bien?' , 'greeting.hello');
-            manager.addDocument('es', 'que hacias?', 'greeting.hello');
-            manager.addAnswer('es', 'greeting.hello', 'Todo bien, vos? En que te puedo ayudar ?');
-            */
-            //
             // if ( !argTraining || Object.keys(argTraining).length==0 ||argTraining==false || argTraining=='false' ){ console.log('...voy a Training default');argTraining=defaultTraining; }
             let tempArrayTrain = typeof argTraining=="object" ? Object.values(argTraining) : argTraining ;
             let tempEntity     = {} ;
@@ -125,11 +113,11 @@ export const trainAsistente = (argLanguage,argTraining) => {
 //
 export const assistantManager = (argDb) => {
     //
-    const getAsistente = (argIdAgente) => {
+    const getAsistente = (argIdAgente,argflagForzarTraining=false) => {
         return new Promise(function(respOk,respRech){
             try {
                 //
-                if ( cacheSessiones[argIdAgente] ){
+                if ( cacheSessiones[argIdAgente] && argflagForzarTraining==false ){
                     let cacheAsistente = cacheSessiones[argIdAgente] ;
                     respOk( cacheAsistente ) ;
                     //

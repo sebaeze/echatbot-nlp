@@ -9,6 +9,14 @@
         "passwordEmailGateway":"qaz11qaz",
         "nombreMuestraEmailGateway":"eChatbot"
     },
+    "API":{
+        "dev":{
+            "NLP_TRAIN_SECRET":"zxc@asdqwe54321"
+        },
+        "produccion":{
+            "NLP_TRAIN_SECRET":"zxc@asdqwe54321"
+        }
+    },
     "database":{
         "dev":{
             "type":"mongodb",
