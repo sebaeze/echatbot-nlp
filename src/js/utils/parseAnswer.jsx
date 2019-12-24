@@ -30,7 +30,6 @@ const parseText     = (argAnswer,tempStyle) => {
 const parseImage    = (argAnswer,tempStyle) => {
     let outEle = false ;
     try {
-        //let custStyle = elemOpt.customStyle ? elemOpt.customStyle : {paddingLeft:'10%',width:'250px',height:'auto'} ;
         let customAlt = argAnswer.alt ? argAnswer.alt : "" ;
         outEle = <ImageLoader src={argAnswer.source}
                               altImg={customAlt}
