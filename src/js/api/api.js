@@ -58,10 +58,10 @@ export const fetchChatlog = (argQry) => {
     }) ;
 } ;
 //
-export const getIdConversation = (argFlagChatbot=true) => {
+export const getIdConversation = (argFlagChatbot=true,argFlagNewConversation=false) => {
     return new Promise(function(respData,respRech){
         try {
-            let idConversation = ls( PARAMETROS.SESSION.ID_CONVERSATION ) || false ;
+            let idConversation = (argFlagNewConversation==true) ? false : ( ls( PARAMETROS.SESSION.ID_CONVERSATION ) || false ) ;
             if ( idConversation ){
                 if ( argFlagChatbot==true ){
                     fetchChatlog( {_id:idConversation} )

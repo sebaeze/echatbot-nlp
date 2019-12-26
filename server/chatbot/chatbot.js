@@ -87,7 +87,9 @@ export const trainAsistente = (argLanguage,argTraining) => {
                 }
                 objTrain.examples.forEach((elemExample)=>{
                     try {
-                        manager.addDocument( argLanguage , elemExample , objTrain.entity );
+                        if ( elemExample && elemExample!=null ){
+                            manager.addDocument( argLanguage , elemExample , objTrain.entity );
+                        }
                     } catch(errADDd){
                         console.log('....ERROR: addDocumento:: train:: errADDd: ',errADDd,' \n objTrain: ',objTrain) ;
                     }

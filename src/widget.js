@@ -20,7 +20,9 @@ const initChatbotWidget = (argConfigBot) => {
       document.body.appendChild( divApp ) ;
     }
     //
-    getIdConversation(false)
+    if ( !argConfigBot.training ){ argConfigBot.training=false; }
+    //
+    getIdConversation(false, argConfigBot.training)
       .then((respIdConversation)=>{
         return getChatbotInfo( {idChatbot: argConfigBot.idAgent, idConversation: respIdConversation.id} ) ;
       })

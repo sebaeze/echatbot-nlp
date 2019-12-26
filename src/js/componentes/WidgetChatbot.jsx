@@ -132,6 +132,7 @@ class WidgetChatbot extends Component {
             senderPlaceHolder={this.state.options.senderPlaceholder}
             showCloseButton={true}
             badge={this.state.pendientes}
+            autofocus={true}
           />
       </div>
       )
