@@ -4,8 +4,8 @@
 import React                                   from 'react' ;
 import jstz                                    from '../libs/jstz.min.js'
 import moment                                  from 'moment-timezone';
-import { parseAnswer  }              from '../utils/parseAnswer'  ;
-import { DivMessage  }               from './messages/DivMessage' ;
+import { parseAnswer  }                        from '../utils/parseAnswer'  ;
+import { DivMessage  }                         from './messages/DivMessage' ;
 //
 import 'antd/dist/antd.css';
 //
@@ -22,7 +22,9 @@ export class CustomReply extends React.Component {
     //
     componentDidMount(){
         try {
-            this.props.onOpen() ;
+            if ( this.props.onOpen && typeof this.props.onOpen=="function" ){
+                this.props.onOpen() ;
+            }
             this.setState({flagMount:true}) ;
         } catch(errDM){
             console.dir(errDM) ;
@@ -30,7 +32,9 @@ export class CustomReply extends React.Component {
     }
     //
     componentWillUnmount() {
-        this.props.onClose()
+        if ( this.props.onClose && typeof this.props.onClose=="function" ){
+            this.props.onClose() ;
+        }
     }
     //
     wrapAnswer(elemOpt){
@@ -45,7 +49,9 @@ export class CustomReply extends React.Component {
             //
             return(
                 <DivMessage>
-                    <p style={{width:'100%',textAlign:'center'}}>{tempTs}</p>
+                    {
+                        (this.props.flagTimestamp && this.props.flagTimestamp!=false) ? <p style={{width:'100%',textAlign:'center'}}>{tempTs}</p> : null
+                    }
                     <div style={{...tempStyleMsg}}>{ outEle }</div>
                 </DivMessage>
                 ) ;

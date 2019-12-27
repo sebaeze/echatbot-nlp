@@ -62,13 +62,14 @@ class WidgetChatbot extends Component {
   //
   chatOpenedHandler(){
     if ( this.state.chatOpen!=true ){
+      this.props.onWindowOpen() ;
       this.setState({chatOpen: true, pendientes: 0}) ;
     }
   }
   //
   chatClosedHandler(){
-    console.log("clossed") ;
     if ( this.state.chatOpen!=false ){
+      this.props.onWindowClose() ;
       this.setState({chatOpen: false}) ;
     }
   }

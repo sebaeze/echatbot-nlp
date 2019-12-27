@@ -1,25 +1,33 @@
 /*
 *
 */
-import React                              from "react"      ;
-import ReactDOM                           from "react-dom"  ;
-import WidgetChatbot                      from "./js/componentes/WidgetChatbot" ;
-import ls                                                from 'local-storage'    ;
+import React                                             from "react"         ;
+import ReactDOM                                          from "react-dom"     ;
+import ls                                                from 'local-storage' ;
+import WidgetChatbot                                     from "./js/componentes/WidgetChatbot" ;
+import { CustomReply  }                                  from "./js/componentes/CustomReply"   ;
 import { getChatbotInfo, getIdConversation, PARAMETROS } from "./js/api/api" ;
+//
+const domNodeWidget = () => {
+  let outDiv ;
+  try {
+    let idDiv  = "waiboc-chatbot-widget-"+new Date().getTime() ;
+    outDiv = document.getElementById( idDiv ) || false ;
+    if ( !outDiv ){
+      outDiv    = document.createElement('div') ;
+      outDiv.id = idDiv ;
+      document.body.appendChild( outDiv ) ;
+    }
+  } catch(errDnW){
+    console.log('....ERROR: Create DOM node for widget:: ',errDnW) ;
+  }
+  return outDiv ;
+}
 //
 const initChatbotWidget = (argConfigBot) => {
   try {
     //
-    let idDiv  = "idWidgetChatbot"+new Date().getTime() ;
     console.log('\n\n.....Iniciando widget eChatbot. Id: '+argConfigBot.idAgent+' ==> ') ;
-    //
-    let divApp = document.getElementById( idDiv ) || false ;
-    if ( !divApp ){
-      divApp    = document.createElement('div') ;
-      divApp.id = idDiv ;
-      document.body.appendChild( divApp ) ;
-    }
-    //
     if ( !argConfigBot.training ){ argConfigBot.training=false; }
     //
     getIdConversation(false, argConfigBot.training)
@@ -38,7 +46,20 @@ const initChatbotWidget = (argConfigBot) => {
           }
           //
           ls( PARAMETROS.SESSION.ID_CONVERSATION, respData.result.idConversation ) ;
-          ReactDOM.render( <WidgetChatbot configuration={tempConfig} conversation={{idConversation: respData.result.idConversation,chatlog: respData.result.chatlog}} />, divApp ) ;
+          //
+          if ( typeof argConfigBot.onWindowOpen !="function" ){ argConfigBot.onWindowOpen  = function(){} }
+          if ( typeof argConfigBot.onWindowClose!="function" ){ argConfigBot.onWindowClose = function(){} }
+          //
+          let divApp = domNodeWidget() ;
+          ReactDOM.render(
+                      <WidgetChatbot
+                          configuration={tempConfig}
+                          onWindowOpen={argConfigBot.onWindowOpen}
+                          onWindowClose={argConfigBot.onWindowClose}
+                          conversation={{idConversation: respData.result.idConversation,chatlog: respData.result.chatlog}}
+                      />,
+                      divApp
+                    ) ;
           //
         } else {
           console.log('....CHATBOT IS NOT VALID ---> "'+respData.result.validation+'"') ;
@@ -53,5 +74,8 @@ const initChatbotWidget = (argConfigBot) => {
   }
 } ;
 //
-window.initChatbotWidget = initChatbotWidget ;
+window.waiboc = {
+  initChatbotWidget: initChatbotWidget ,
+  CustomReply: CustomReply
+} ;
 //
