@@ -2,20 +2,22 @@
 *
 */
 import React, { Component }                                      from 'react'  ;
-import { Widget, addResponseMessage, renderCustomComponent, toggleMsgLoader, addUserMessage }     from 'react-chat-widget'  ;
+import { Widget, addResponseMessage, renderCustomComponent, toggleMsgLoader, addUserMessage, toggleWidget }     from 'react-chat-widget'  ;
 import { CustomReply  }                                          from './CustomReply'       ;
 import { fetchChatbot }                                          from '../api/api' ;
 //
 import 'react-chat-widget/lib/styles.css' ;
 import '../../css/estiloChat.css' ;
 //
-class WidgetChatbot extends Component {
+export class WidgetChatbot extends Component {
   constructor(props) {
     super(props) ;
     const { options }  = this.props.configuration ;
     this.state                 = {
       pendientes: 1,
       chatOpen: false,
+      prevWidgetVisible: true,
+      widgetVisible: true ,
       idConversation: this.props.conversation.idConversation,
       options: options ? {...options} : {botName: '',botSubtitle: '',senderPlaceholder: ''}
     } ;
@@ -113,16 +115,22 @@ class WidgetChatbot extends Component {
   }
   //
   static getDerivedStateFromProps(newProps, state) {
+    let newStateProps = {} ;
+    if ( newProps.widgetVisible!=state.widgetVisible ){
+      newStateProps["prevWidgetVisible"] = state.widgetVisible ;
+      newStateProps["widgetVisible"]     = newProps.widgetVisible ;
+    }
     if ( newProps.options && JSON.stringify(newProps.options)!=JSON.stringify(state.options) ){
-      return { options: newProps.options } ;
+      newStateProps["options"] = newProps.options ;
+    }
+    if ( Object.keys(newStateProps).length>0 ){
+      return { newStateProps } ;
     } else {
       return false ;
     }
   }
   //
   render() {
-    //
-    // const { defaultStyle }  = this.props.configuration ;
     //
     return (
       <div id="WaibocWidgetMain" >
@@ -140,6 +148,4 @@ class WidgetChatbot extends Component {
       //
   }
 }
-/* */
-export default WidgetChatbot ;
-/* */
+//

@@ -4,8 +4,8 @@
 import React                                             from "react"         ;
 import ReactDOM                                          from "react-dom"     ;
 import ls                                                from 'local-storage' ;
-import WidgetChatbot                                     from "./js/componentes/WidgetChatbot" ;
-import { CustomReply  }                                  from "./js/componentes/CustomReply"   ;
+import { WidgetChatbot }                                 from "./js/componentes/WidgetChatbot" ;
+import { CustomReply   }                                 from "./js/componentes/CustomReply"   ;
 import { getChatbotInfo, getIdConversation, PARAMETROS } from "./js/api/api" ;
 //
 const domNodeWidget = () => {
@@ -22,6 +22,18 @@ const domNodeWidget = () => {
     console.log('....ERROR: Create DOM node for widget:: ',errDnW) ;
   }
   return outDiv ;
+}
+//
+let flagWidgetVisible = true ;
+const widgetVisible = (argFlag) => {
+  try {
+    if ( flagWidgetVisible!=argFlag ){
+      flagWidgetVisible = argFlag ;
+    }
+  } catch(errWV){
+    console.log('...ERROR: Widget visible:: ',errWV) ;
+  }
+  return flagWidgetVisible ;
 }
 //
 const initChatbotWidget = (argConfigBot) => {
@@ -54,6 +66,7 @@ const initChatbotWidget = (argConfigBot) => {
           ReactDOM.render(
                       <WidgetChatbot
                           configuration={tempConfig}
+                          widgetVisible={flagWidgetVisible}
                           onWindowOpen={argConfigBot.onWindowOpen}
                           onWindowClose={argConfigBot.onWindowClose}
                           conversation={{idConversation: respData.result.idConversation,chatlog: respData.result.chatlog}}
@@ -76,6 +89,7 @@ const initChatbotWidget = (argConfigBot) => {
 //
 window.waiboc = {
   initChatbotWidget: initChatbotWidget ,
+  widgetVisible: widgetVisible ,
   CustomReply: CustomReply
 } ;
 //
