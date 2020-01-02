@@ -9,7 +9,7 @@ const https            = require('https') ;
 const bodyParser       = require('body-parser') ;
 const cookieParser     = require('cookie-parser')   ;
 const session          = require('express-session') ;
-const MemoryStore      = require('session-memory-store')(session);
+const MongoStore       = require('connect-mongo')(session);
 //
 //const dbClass          = require('./db/dbIndex').bases ;
 import { bases as dbClass }   from 'echatbot-mongodb' ;
@@ -25,7 +25,14 @@ const db               = dbClass( configDb ) ;
 app.use(cookieParser()) ;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(session({ name:'mlsess',secret: 'wsx22wsx',cookie: {path: '/',httpOnly: true,maxAge: 6000000 },proxy: true, resave: true,saveUninitialized: true, store: new MemoryStore() }));
+//
+app.use(session({
+  name:'mlsess',secret: 'wsx22wsx',cookie: {path: '/',httpOnly: true,maxAge: (2 * 24 * 60 * 60 * 1000) },proxy: true, resave: true,saveUninitialized: true,
+  store: new MongoStore({
+    mongooseConnection: db.chatbot.getConeccion().connection,
+    collection:'sessionswidget'
+  })
+}));
 //
 const puerto          = process.env.PUERTO_WIDGET ? String(process.env.PUERTO_WIDGET).trim() : 3001  ;
 const routerIndex     = require( './routes/routerIndex' )     ;

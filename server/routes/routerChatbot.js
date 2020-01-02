@@ -36,6 +36,7 @@ module.exports = (argConfig,argDb) => {
             return asistenteChatbot.process( req.body.input.text ) ;
           })
           .then((resuBot)=>{
+            console.log('.....resuBot:: ',resuBot) ;
             let tempRespuesta = resuBot.answer ? {output: {...resuBot.answer}} : {output: { type: 'text', answer: ['No hay polque, no respuesta'] } } ;
             let tempUserNavigator = {...userNavigator} ;
             tempUserNavigator     = Object.assign(tempUserNavigator,req.headers) ;
