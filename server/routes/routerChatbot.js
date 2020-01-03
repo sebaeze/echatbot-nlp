@@ -50,6 +50,12 @@ module.exports = (argConfig,argDb) => {
           .then((resuAnswer)=>{
             res.json( resuAnswer ) ;
           })
+          .then((resuAnswer)=>{
+            return argDb.chatbot.incrementChatbotUsage({_id: req.body.idAgente,qty: 1}) ;
+          })
+          .then((resuQty)=>{
+            /* */
+          })
           .catch(err => {
             console.log(err)
             res.status(500) ;
