@@ -16,7 +16,7 @@ const parseText     = (argAnswer,tempStyle) => {
         outDiv = <p style={{...tempStyle,marginBottom:'0'}}>
             {
                 arrayAnswers.map((eleTT,idxTT)=>{
-                    return( <span key={idxTT}>{eleTT}</span>)
+                    return( <span key={idxTT} style={{whiteSpace: 'pre-wrap'}}  >{eleTT}</span>)
                 })
             }
         </p>  ;
