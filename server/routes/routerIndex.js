@@ -5,6 +5,17 @@ const path              = require('path')    ;
 const express           = require('express') ;
 const router            = require('express').Router()   ;
 //
+import expressStaticGzip   from "express-static-gzip" ;
+/*
+app.use('/build/client', expressStaticGzip('build/client',{
+  enableBrotli: true,
+  orderPreference: ['br', 'gz'],
+  setHeaders: function (res, path) {
+     res.setHeader("Cache-Control", "public, max-age=31536000");
+  }
+}));
+*/
+//
 let opciones = {
   dotfiles: 'ignore',etag: false,extensions: [],index: false,maxAge: '1d' ,redirect: false,
   setHeaders: function (res, argPath, argStat) {
@@ -21,7 +32,17 @@ let opciones = {
 */
 module.exports = (argConfig,argDb) => {
   //
-  router.use('/', express.static( path.join(__dirname,'../../dist') , opciones ) );
+  //router.use('/', express.static( path.join(__dirname,'../../dist') , opciones ) );
+  router.use('/', expressStaticGzip( path.join(__dirname,'../../dist') ,
+    {
+      index: false,
+      enableBrotli: true,
+      orderPreference: ['br', 'gz'],
+      setHeaders: function (res, path) {
+        res.setHeader("Cache-Control", "public, max-age=31536000");
+      }
+    })
+  );
   //
   router.get('/', function(req, res) {
     res.set('access-Control-Allow-Origin', '*');
