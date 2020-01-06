@@ -25,7 +25,7 @@
         },
         "produccion":{
             "type":"mongodb",
-            "url":"mongodb://sebaeze:qaz11qaz@66.97.39.81:20017",
+            "url":"mongodb://sebaeze:qaz11qaz@66.97.35.197:20017",
             "database":"Waiboc"
         }
     }
