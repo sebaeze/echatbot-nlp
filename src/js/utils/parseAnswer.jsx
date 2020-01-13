@@ -7,13 +7,13 @@ import { ImageLoader }                         from '../componentes/image/ImageL
 import { TableDynamic }                        from '../componentes/table/TableDynamic'  ;
 import { MessageCarousel }                     from '../componentes/messages/MessageCarousel' ;
 //
-const parseText     = (argAnswer,tempStyle) => {
+const parseText     = (argAnswer,tempStyle,argKey) => {
     let outDiv = false ;
     try {
         let tempText     = (argAnswer.text ? argAnswer.text : argAnswer.answer) || [""] ; ;
         let arrayAnswers = Array.isArray(tempText)==true ? tempText : new Array( tempText ) ;
         //
-        outDiv = <p style={{...tempStyle,marginBottom:'0'}}>
+        outDiv = <p style={{...tempStyle,marginBottom:'0'}} key={argKey} >
             {
                 arrayAnswers.map((eleTT,idxTT)=>{
                     return( <span key={idxTT} style={{whiteSpace: 'pre-wrap'}}  >{eleTT}</span>)
@@ -26,6 +26,53 @@ const parseText     = (argAnswer,tempStyle) => {
         throw errPT ;
     }
     return outDiv ;
+}
+const parseFiles    = (argAnswer, argKey) => {
+    let outEle = null ;
+    try {
+        if ( argAnswer.files && argAnswer.files.length>0 ){
+            outEle = <div key={argKey+"_files"}>
+                {
+                    argAnswer.files.map((elemFile, elemIdx)=>{
+                        let outfile = null ;
+                        if ( elemFile.type.indexOf('image')!=-1 ){
+                            outfile = <ImageLoader  key={elemIdx}
+                                                    src={elemFile.relativePath}
+                                                    altImg={elemFile.alt ? elemFile.alt : ""}
+                                                    className="" loadingClassName="loading" loadedClassName=""
+                                                    customStyle={{img:{marginTop:'10px'}}}
+                                                    title={elemFile.name}
+                                                    alt={elemFile.name}
+                                        />
+                        } else {
+                            let styleFile = {color:'green', fontSize:'32px',marginRight:'20px', marginTop:'10px'} ;
+                            let iconFile  = <Icon type="file" style={styleFile} /> ;
+                            switch(elemFile.type.trim()){
+                                case 'application/vnd.ms-excel':       iconFile  = <Icon type="file-excel" style={styleFile} /> ; break ;
+                                case 'application/pdf':                iconFile  = <Icon type="file-pdf"   style={styleFile} /> ; break ;
+                                case 'application/vnd.ms-powerpoint':  iconFile  = <Icon type="file-ppt" style={styleFile} /> ; break ;
+                                case 'application/zip':                iconFile  = <Icon type="file-zip" style={styleFile} /> ; break ;
+                                default:
+                                    console.log('....formato desconocido de archivo:: ',elemFile) ;
+                                break ;
+                            }
+                            outfile = <div key={elemIdx}>
+                                        {iconFile}
+                                        <span style={{fontSize:'20px'}}>
+                                            <a href={elemFile.relativePath} target="_blank" >{elemFile.name}</a>
+                                        </span>
+                                    </div> ;
+                        }
+                        return outfile ;
+                    })
+                }
+            </div> ;
+        }
+    } catch(errPI){
+        console.dir(errPI) ;
+        throw errPI ;
+    }
+    return outEle ;
 }
 const parseImage    = (argAnswer,tempStyle) => {
     let outEle = false ;
@@ -90,6 +137,7 @@ const parseCarousel = (argAnswer) => {
 //
 const allParsers = {
     text: parseText ,
+    files: parseFiles ,
     image: parseImage ,
     json: parseJson ,
     option: parseOption ,
@@ -98,11 +146,24 @@ const allParsers = {
 //
 export const parseAnswer = (argAnswer, argStyle={}) => {
     try {
-        let parser = allParsers[ argAnswer.type ] || false ;
-        if ( parser==false ){
-            throw new Error('ERROR: Answer type "'+argAnswer.type+'" is unknown. Answer:: '+JSON.stringify(argAnswer)) ;
+        let arrayOut     = [] ;
+        let arrayAnswers = Array.isArray(argAnswer) ? argAnswer : new Array(argAnswer);
+        for ( let indArr=0; indArr<arrayAnswers.length; indArr++ ){
+            let answerElem = arrayAnswers[ indArr ] ;
+            let parser    = allParsers[ answerElem.type ] || false ;
+            if ( parser==false ){
+                throw new Error('ERROR: Answer type "'+answerElem.type+'" is unknown. Answer:: '+JSON.stringify(answerElem)) ;
+            }
+            let answerResult  = <div key={indArr} >
+                                    { parser( answerElem, argStyle,indArr ) }
+                                    { parseFiles( answerElem, indArr ) }
+                                </div> ;
+            //parser( answerElem, argStyle,indArr ) ;
+            //arrayOut.push( answerResult ) ;
+            //arrayOut.push( parseFiles( answerElem, indArr ) ) ;
+            arrayOut.push( answerResult ) ;
         }
-        return parser( argAnswer, argStyle ) ;
+        return arrayOut ;
     } catch(errPA){
         console.dir(errPA) ;
         throw errPA ;
