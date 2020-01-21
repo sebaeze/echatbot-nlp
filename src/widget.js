@@ -48,7 +48,9 @@ const initChatbotWidget = (argConfigBot) => {
       })
       .then((respData)=>{
         if ( respData.result.validation==PARAMETROS.CHATBOT_STATUS.ACTIVE ){
-          let tempConfig = {...respData.result} ;
+          let tempConfig = {
+            options: respData.result.options ? {...respData.result.options} : {...respData.result}
+          } ;
           // Sobreescribe valores de configuracion en DB, por valores indicados localmente
           for ( let keyConf in argConfigBot ){
             let valConf = argConfigBot[keyConf] ;

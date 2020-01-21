@@ -47,20 +47,27 @@ const parseFiles    = (argAnswer, argKey) => {
                         } else {
                             let styleFile = {color:'green', fontSize:'32px',marginRight:'20px', marginTop:'10px'} ;
                             let iconFile  = <Icon type="file" style={styleFile} /> ;
-                            switch(elemFile.type.trim()){
+                            switch( String(elemFile.type).trim() ){
                                 case 'application/vnd.ms-excel':       iconFile  = <Icon type="file-excel" style={styleFile} /> ; break ;
                                 case 'application/pdf':                iconFile  = <Icon type="file-pdf"   style={styleFile} /> ; break ;
-                                case 'application/vnd.ms-powerpoint':  iconFile  = <Icon type="file-ppt" style={styleFile} /> ; break ;
-                                case 'application/zip':                iconFile  = <Icon type="file-zip" style={styleFile} /> ; break ;
+                                case 'application/vnd.ms-powerpoint':  iconFile  = <Icon type="file-ppt"   style={styleFile} /> ; break ;
+                                case 'application/zip':                iconFile  = <Icon type="file-zip"   style={styleFile} /> ; break ;
+                                case 'video/mp4':
+                                    iconFile = <video loop="" autoplay="" muted="" style={{marginTop:'10px',minHeight:'30vh' }} >
+                                                    <source src={elemFile.relativePath} type="video/mp4" />
+                                                </video> ;
+                                break ;
                                 default:
-                                    console.log('....formato desconocido de archivo:: ',elemFile) ;
+                                    console.log('....formato desconocido de archivo:: type: '+String(elemFile.type).trim()+' objeto: ',elemFile) ;
                                 break ;
                             }
                             outfile = <div key={elemIdx}>
-                                        {iconFile}
-                                        <span style={{fontSize:'20px'}}>
-                                            <a href={elemFile.relativePath} target="_blank" >{elemFile.name}</a>
-                                        </span>
+                                        <a href={elemFile.relativePath} target="_blank" >
+                                            {iconFile}
+                                            <span style={{marginLeft:'10px', fontSize:'20px'}} >
+                                                {elemFile.name}
+                                            </span>
+                                        </a>
                                     </div> ;
                         }
                         return outfile ;
@@ -154,14 +161,14 @@ export const parseAnswer = (argAnswer, argStyle={}) => {
             if ( parser==false ){
                 throw new Error('ERROR: Answer type "'+answerElem.type+'" is unknown. Answer:: '+JSON.stringify(answerElem)) ;
             }
-            let answerResult  = <div key={indArr} >
-                                    { parser( answerElem, argStyle,indArr ) }
-                                    { parseFiles( answerElem, indArr ) }
-                                </div> ;
-            //parser( answerElem, argStyle,indArr ) ;
-            //arrayOut.push( answerResult ) ;
-            //arrayOut.push( parseFiles( answerElem, indArr ) ) ;
-            arrayOut.push( answerResult ) ;
+            //
+            arrayOut.push(
+                <div key={indArr} >
+                    { parser( answerElem, argStyle,indArr ) }
+                    { parseFiles( answerElem, indArr ) }
+                </div>
+            ) ;
+            //
         }
         return arrayOut ;
     } catch(errPA){
