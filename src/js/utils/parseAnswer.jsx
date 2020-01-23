@@ -53,7 +53,7 @@ const parseFiles    = (argAnswer, argKey) => {
                                 case 'application/vnd.ms-powerpoint':  iconFile  = <Icon type="file-ppt"   style={styleFile} /> ; break ;
                                 case 'application/zip':                iconFile  = <Icon type="file-zip"   style={styleFile} /> ; break ;
                                 case 'video/mp4':
-                                    iconFile = <video loop="" autoplay="" muted="" style={{marginTop:'10px',minHeight:'30vh' }} >
+                                    iconFile = <video loop="" autoPlay="" muted="" style={{marginTop:'10px',minHeight:'30vh' }} >
                                                     <source src={elemFile.relativePath} type="video/mp4" />
                                                 </video> ;
                                 break ;
