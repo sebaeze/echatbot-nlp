@@ -155,6 +155,7 @@ export const validateChatbotAgent = (argDb,argReq) => {
                         description: arrconversation.description,
                         validation: (flagOk==false ? 'INVALID_WEBSITE_DOMAIN' : arrconversation.status ),
                         idConversation: '',
+                        options: arrconversation.options || {},
                         chatlog: []
                 } ;
                 //

@@ -131,12 +131,13 @@ export class WidgetChatbot extends Component {
   }
   //
   render() {
+    console.log('....this.state.option: ',this.state.options) ;
     //
     return (
       <div id="WaibocWidgetMain" >
           <Widget
             handleNewUserMessage={this.handleNewUserMessage}
-            title={this.state.options.botName}
+            title={this.state.options.nameToDisplay ? this.state.options.nameToDisplay : this.state.options.botName}
             subtitle={this.state.options.botSubtitle}
             senderPlaceHolder={this.state.options.senderPlaceholder}
             showCloseButton={true}

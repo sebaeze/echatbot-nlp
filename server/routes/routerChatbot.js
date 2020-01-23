@@ -31,6 +31,7 @@ module.exports = (argConfig,argDb) => {
         res.header('Access-Control-Allow-Headers', 'content-type');
         res.setHeader("Access-Control-Allow-Credentials", true);
         //
+        let answerBot = false ;
         chatbotAsistente.get( req.body.idAgente )
           .then((asistenteChatbot)=>{
             return asistenteChatbot.process( req.body.input.text ) ;
@@ -40,7 +41,8 @@ module.exports = (argConfig,argDb) => {
               console.log('.....resuBot:: ',resuBot) ;
             }
             //
-            let tempRespuesta = resuBot.answer ? {output: {...resuBot.answer}} : {output: { type: 'text', answer: ['No hay polque, no respuesta'] } } ;
+            answerBot = {...resuBot} ;
+            let tempRespuesta     = resuBot.answer ? {output: {...resuBot.answer}} : {output: { type: 'text', answer: ['No hay polque, no respuesta'] } } ;
             let tempUserNavigator = {...userNavigator} ;
             tempUserNavigator     = Object.assign(tempUserNavigator,req.headers) ;
             tempUserNavigator.ip  = req.ip || '' ;
@@ -54,7 +56,16 @@ module.exports = (argConfig,argDb) => {
             res.json( resuAnswer ) ;
           })
           .then((resuAnswer)=>{
-            return argDb.chatbot.incrementChatbotUsage({_id: req.body.idAgente,qty: 1}) ;
+            let usageEntity = {} ;
+            if ( String(answerBot.intent).toUpperCase()!="NONE" ){
+              usageEntity = {
+                entity: {
+                  qty: 1,
+                  name: answerBot.intent
+                }
+              } ;
+            }
+            return argDb.chatbot.incrementChatbotUsage( { _id: req.body.idAgente,qty: 1, ...usageEntity } ) ;
           })
           .then((resuQty)=>{
             /* */
