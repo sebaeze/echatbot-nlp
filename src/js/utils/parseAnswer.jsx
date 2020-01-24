@@ -151,8 +151,17 @@ const allParsers = {
     carousel: parseCarousel
 }
 //
-export const parseAnswer = (argAnswer, argStyle={}) => {
+export const parseAnswer = (argAnswer, argStyle={}, toggleInput) => {
     try {
+        //
+        let flagHayOpciones  = false ;
+        let flagCambieEstado = false ;
+        if ( toggleInput && typeof toggleInput=="function" ){
+            toggleInput() ;
+            flagCambieEstado = true ;
+            console.log('....(A) cambie de estado el input ') ;
+        }
+        //
         let arrayOut     = [] ;
         let arrayAnswers = Array.isArray(argAnswer) ? argAnswer : new Array(argAnswer);
         for ( let indArr=0; indArr<arrayAnswers.length; indArr++ ){
@@ -162,14 +171,22 @@ export const parseAnswer = (argAnswer, argStyle={}) => {
                 throw new Error('ERROR: Answer type "'+answerElem.type+'" is unknown. Answer:: '+JSON.stringify(answerElem)) ;
             }
             //
+            if ( answerElem.type=="option" ){ flagHayOpciones = true; }
+            //
             arrayOut.push(
                 <div key={indArr} >
                     { parser( answerElem, argStyle,indArr ) }
                     { parseFiles( answerElem, indArr ) }
                 </div>
             ) ;
-            //
         }
+        //
+        if ( flagCambieEstado==true && flagHayOpciones==false ){
+            toggleInput() ;
+            flagCambieEstado = false ;
+            console.log('....ya ejecuteeeeee') ;
+        }
+        //
         return arrayOut ;
     } catch(errPA){
         console.dir(errPA) ;

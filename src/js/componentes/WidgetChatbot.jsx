@@ -2,7 +2,8 @@
 *
 */
 import React, { Component }                                      from 'react'  ;
-import { Widget, addResponseMessage, renderCustomComponent, toggleMsgLoader, addUserMessage, toggleWidget }     from 'react-chat-widget'  ;
+import { Widget, addResponseMessage, renderCustomComponent }     from 'react-chat-widget'  ;
+import { toggleInputDisabled ,toggleMsgLoader, addUserMessage }  from 'react-chat-widget'  ;
 import { CustomReply  }                                          from './CustomReply'       ;
 import { fetchChatbot }                                          from '../api/api' ;
 //
@@ -51,6 +52,7 @@ export class WidgetChatbot extends Component {
                                   windowStyle: this.props.configuration.windowStyle,
                                   onOpen: this.chatOpenedHandler ,
                                   onClose: this.chatClosedHandler
+                                  // ,toggleInput: toggleInputDisabled.bind(this)
                                 }, false ) ;
           }
         }
@@ -102,14 +104,14 @@ export class WidgetChatbot extends Component {
                       windowStyle: this.props.configuration.windowStyle,
                       addMsg:addResponseMessage.bind(this) ,
                       onOpen: this.chatOpenedHandler ,
-                      onClose: this.chatClosedHandler
+                      onClose: this.chatClosedHandler ,
+                      toggleInput: toggleInputDisabled
                     }, false ) ;
           toggleMsgLoader();
       })
       .catch((errBot)=>{
-        console.log('....errBot: ') ;
-        console.dir(errBot) ;
-        toggleMsgLoader();
+        console.log('....ERROR: handleNewUserMessage:: error: ',errBot) ;
+        toggleMsgLoader() ;
       }) ;
     //
   }
