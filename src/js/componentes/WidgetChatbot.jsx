@@ -10,6 +10,8 @@ import { fetchChatbot }                                          from '../api/ap
 import 'react-chat-widget/lib/styles.css' ;
 import '../../css/estiloChat.css' ;
 //
+import logoSVG                                                     from '../../img/waiboc.logo.svg';
+//
 export class WidgetChatbot extends Component {
   constructor(props) {
     super(props) ;
@@ -51,7 +53,7 @@ export class WidgetChatbot extends Component {
                                   addMsg: addResponseMessage.bind(this) ,
                                   windowStyle: this.props.configuration.windowStyle,
                                   onOpen: this.chatOpenedHandler ,
-                                  onClose: this.chatClosedHandler
+                                  onClose: this.chatClosedHandler,
                                   // ,toggleInput: toggleInputDisabled.bind(this)
                                 }, false ) ;
           }
@@ -145,6 +147,7 @@ export class WidgetChatbot extends Component {
             showCloseButton={true}
             badge={this.state.pendientes}
             autofocus={true}
+            profileAvatar={logoSVG}
           />
       </div>
       )

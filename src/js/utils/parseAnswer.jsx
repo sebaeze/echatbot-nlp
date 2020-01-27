@@ -7,7 +7,11 @@ import { ImageLoader }                         from '../componentes/image/ImageL
 import { TableDynamic }                        from '../componentes/table/TableDynamic'  ;
 import { MessageCarousel }                     from '../componentes/messages/MessageCarousel' ;
 //
-const parseText     = (argAnswer,tempStyle,argKey) => {
+const ReactRenderDynamic = (argProps) => {
+    return( <div dangerouslySetInnerHTML={{__html: argProps.text}}></div> ) ;
+} ;
+//
+const parseText     = (argAnswer,tempStyle,argKey,argOnClickOpcion, argToggleInput) => {
     let outDiv = false ;
     try {
         let tempText     = (argAnswer.text ? argAnswer.text : argAnswer.answer) || [""] ; ;
@@ -81,23 +85,6 @@ const parseFiles    = (argAnswer, argKey) => {
     }
     return outEle ;
 }
-const parseImage    = (argAnswer,tempStyle) => {
-    let outEle = false ;
-    try {
-        let customAlt = argAnswer.alt ? argAnswer.alt : "" ;
-        outEle = <ImageLoader src={argAnswer.source}
-                              altImg={customAlt}
-                              className="" loadingClassName="loading" loadedClassName=""
-                              customStyle={{...tempStyle}}
-                              title={argAnswer.title}
-                              alt={argAnswer.description}
-                /> ;
-    } catch(errPI){
-        console.dir(errPI) ;
-        throw errPI ;
-    }
-    return outEle ;
-}
 const parseJson     = (argAnswer) => {
     let outEle = false ;
     try {
@@ -108,16 +95,21 @@ const parseJson     = (argAnswer) => {
     }
     return outEle ;
 }
-const parseOption   = (argAnswer,tempStyle) => {
+const parseOption   = (argAnswer,tempStyle,argKey,argOnClickOpcion,argToggleInput) => {
     let outEle = false ;
     try {
         outEle =    <div >
-                        <span>{<ReactRenderDynamic text={argAnswer.title} />}</span>
+                        <span>{<ReactRenderDynamic text={argAnswer.text} />}</span>
                         {
                             argAnswer.options.map((elemInner, elemIdx)=>{
                                 return (
                                     <Button key={elemIdx} style={{marginTop:'5px'}} block
-                                            onClick={ (argEE)=>{ argEE.preventDefault();this.props.onClickOpcion(elemInner.value);} }
+                                            onClick={ (argEE)=>{
+                                                argEE.preventDefault() ;
+                                                console.log('.....voy a cambiar toggle despues de optionssss:: argToggleInput: ',argToggleInput) ;
+                                                argToggleInput() ;
+                                                // argOnClickOpcion(elemInner.value) ;
+                                            }}
                                     >
                                         {elemInner.label
                                     }</Button>
@@ -145,14 +137,16 @@ const parseCarousel = (argAnswer) => {
 const allParsers = {
     text: parseText ,
     files: parseFiles ,
-    image: parseImage ,
     json: parseJson ,
-    option: parseOption ,
+    options: parseOption ,
     carousel: parseCarousel
 }
 //
-export const parseAnswer = (argAnswer, argStyle={}, toggleInput) => {
+//export const parseAnswer = (argAnswer, argStyle={}, toggleInput) => {
+export const parseAnswer = ( argParams ) => {
     try {
+        //
+        const { answer, customStyle, onClickOpcion, toggleInput } = argParams ;
         //
         let flagHayOpciones  = false ;
         let flagCambieEstado = false ;
@@ -163,7 +157,7 @@ export const parseAnswer = (argAnswer, argStyle={}, toggleInput) => {
         }
         //
         let arrayOut     = [] ;
-        let arrayAnswers = Array.isArray(argAnswer) ? argAnswer : new Array(argAnswer);
+        let arrayAnswers = Array.isArray(answer) ? answer : new Array(answer);
         for ( let indArr=0; indArr<arrayAnswers.length; indArr++ ){
             let answerElem = arrayAnswers[ indArr ] ;
             let parser    = allParsers[ answerElem.type ] || false ;
@@ -171,11 +165,11 @@ export const parseAnswer = (argAnswer, argStyle={}, toggleInput) => {
                 throw new Error('ERROR: Answer type "'+answerElem.type+'" is unknown. Answer:: '+JSON.stringify(answerElem)) ;
             }
             //
-            if ( answerElem.type=="option" ){ flagHayOpciones = true; }
+            if ( answerElem.type=="options" ){ flagHayOpciones = true; }
             //
             arrayOut.push(
                 <div key={indArr} >
-                    { parser( answerElem, argStyle,indArr ) }
+                    { parser( answerElem, customStyle, indArr, onClickOpcion, toggleInput ) }
                     { parseFiles( answerElem, indArr ) }
                 </div>
             ) ;

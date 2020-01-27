@@ -4,6 +4,9 @@
 #WaibocWidgetMain .rcw-message {
   font-size: 17px !important ;
 }
+#WaibocWidgetMain .rcw-new-message:disabled {
+  background: #dddddd !important ;
+}
 #WaibocWidgetMain .rcw-send {
   background: #f4f7f9 !important ;
   border: 0 !important ;
