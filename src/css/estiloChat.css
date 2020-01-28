@@ -3,6 +3,7 @@
 */
 #WaibocWidgetMain .rcw-message {
   font-size: 17px !important ;
+  transition: color 0.4s ease-in, background-color 0.4s ease-in; 
 }
 #WaibocWidgetMain .rcw-new-message:disabled {
   background: #dddddd !important ;
@@ -21,6 +22,18 @@
 }
 #WaibocWidgetMain .rcw-open-launcher:hover {
   cursor: pointer !important ;
+}
+#WaibocWidgetMain .rcw-message .ant-tag {
+  transition: box-shadow 0.6s !important ;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  padding: 5px 10px 5px 10px !important;
+  border-radius: 9px !important;
+  cursor: pointer !important ;
+}
+#WaibocWidgetMain .rcw-message .ant-tag:hover {
+  box-shadow: 1px 4px 8px 1px rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important ;
+  /* border-bottom: 0.5px dotted grey !important ; */
 }
 /*  */
 @media (max-width: 375px) {

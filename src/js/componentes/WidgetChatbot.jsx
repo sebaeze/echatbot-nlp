@@ -11,6 +11,7 @@ import 'react-chat-widget/lib/styles.css' ;
 import '../../css/estiloChat.css' ;
 //
 import logoSVG                                                     from '../../img/waiboc.logo.svg';
+let flagInputDisable = true ;
 //
 export class WidgetChatbot extends Component {
   constructor(props) {
@@ -18,12 +19,14 @@ export class WidgetChatbot extends Component {
     const { options }  = this.props.configuration ;
     this.state                 = {
       pendientes: 1,
+      flagInputDisable: true,
       chatOpen: false,
       prevWidgetVisible: true,
       widgetVisible: true ,
       idConversation: this.props.conversation.idConversation,
       options: options ? {...options} : {botName: '',botSubtitle: '',senderPlaceholder: ''}
     } ;
+    this.customToggleInputDisabled = this.customToggleInputDisabled.bind(this) ;
     this.handleNewUserMessage  = this.handleNewUserMessage.bind(this) ;
     this.onClickOpcion         = this.onClickOpcion.bind(this) ;
     this.chatOpenedHandler     = this.chatOpenedHandler.bind(this) ;
@@ -66,6 +69,24 @@ export class WidgetChatbot extends Component {
     }
   }
   //
+  customToggleInputDisabled(argFlag, argMM){
+    try {
+      //
+      console.log('....argMM: ',argMM,' argFlag: ',argFlag,' flagInputDisable: ',flagInputDisable) ;
+      if ( flagInputDisable!=argFlag ){
+        let tempTime = argFlag==true ? 500 : 200 ;
+        setTimeout(() => {
+          toggleInputDisabled() ;
+          flagInputDisable = argFlag ;
+        }, tempTime );
+        // this.setState({flagInputDisable: argFlag}) ;
+      }
+      //
+    } catch(errCTI){
+      console.log('..ERROR: CustomToggleInput:: error: ',errCTI) ;
+    }
+  }
+  //
   chatOpenedHandler(){
     if ( this.state.chatOpen!=true ){
       this.props.onWindowOpen() ;
@@ -99,6 +120,7 @@ export class WidgetChatbot extends Component {
     toggleMsgLoader();
     fetchChatbot({idAgente: this.props.configuration.idAgent,_id: this.state.idConversation,input:{text:newMessage} })
       .then((respBot)=>{
+        console.log('....handleNewUserMessage:: msg: ',newMessage) ;
           renderCustomComponent( CustomReply.bind(this) ,
                     {
                       datos: respBot ,
@@ -107,7 +129,8 @@ export class WidgetChatbot extends Component {
                       addMsg:addResponseMessage.bind(this) ,
                       onOpen: this.chatOpenedHandler ,
                       onClose: this.chatClosedHandler ,
-                      toggleInput: toggleInputDisabled
+                      // toggleInput: toggleInputDisabled
+                      toggleInput: this.customToggleInputDisabled.bind(this)
                     }, false ) ;
           toggleMsgLoader();
       })
@@ -135,7 +158,6 @@ export class WidgetChatbot extends Component {
   }
   //
   render() {
-    console.log('....this.state.option: ',this.state.options) ;
     //
     return (
       <div id="WaibocWidgetMain" >

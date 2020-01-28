@@ -1,14 +1,21 @@
 /*
 *
 */
-import React                                   from 'react' ;
-import { Button, Icon }                        from 'antd'  ;
+import React, { userState }                    from 'react' ;
+import { Button, Icon, Tag }                   from 'antd'  ;
 import { ImageLoader }                         from '../componentes/image/ImageLoader'   ;
 import { TableDynamic }                        from '../componentes/table/TableDynamic'  ;
 import { MessageCarousel }                     from '../componentes/messages/MessageCarousel' ;
 //
 const ReactRenderDynamic = (argProps) => {
-    return( <div dangerouslySetInnerHTML={{__html: argProps.text}}></div> ) ;
+    const subs = /(^.*)(\$(.*))/.exec(argProps.text);
+    // console.log('....subs: ',subs) ;
+    return(
+        <div>
+            {argProps.text}
+        </div>
+    ) ;
+    // return( <div dangerouslySetInnerHTML={{__html: argProps.text}}></div> ) ;
 } ;
 //
 const parseText     = (argAnswer,tempStyle,argKey,argOnClickOpcion, argToggleInput) => {
@@ -98,21 +105,24 @@ const parseJson     = (argAnswer) => {
 const parseOption   = (argAnswer,tempStyle,argKey,argOnClickOpcion,argToggleInput) => {
     let outEle = false ;
     try {
+        if ( argAnswer.options.length>0 ){
+            argToggleInput(false,'desde define options: ') ;
+        }
         outEle =    <div >
                         <span>{<ReactRenderDynamic text={argAnswer.text} />}</span>
                         {
                             argAnswer.options.map((elemInner, elemIdx)=>{
                                 return (
-                                    <Button key={elemIdx} style={{marginTop:'5px'}} block
+                                    <Tag    key={elemIdx} style={{marginTop:'5px'}}
                                             onClick={ (argEE)=>{
                                                 argEE.preventDefault() ;
-                                                console.log('.....voy a cambiar toggle despues de optionssss:: argToggleInput: ',argToggleInput) ;
-                                                argToggleInput() ;
-                                                // argOnClickOpcion(elemInner.value) ;
+                                                // console.log('.....voy a cambiar toggle despues de optionssss:: argToggleInput: ',argToggleInput) ;
+                                                argToggleInput(true,'desde click en tag: '+elemInner.label) ;
+                                                argOnClickOpcion(elemInner.value) ;
                                             }}
                                     >
-                                        {elemInner.label
-                                    }</Button>
+                                        {elemInner.label}
+                                    </Tag>
                                 )
                             })
                         }
@@ -148,24 +158,27 @@ export const parseAnswer = ( argParams ) => {
         //
         const { answer, customStyle, onClickOpcion, toggleInput } = argParams ;
         //
+        /*
         let flagHayOpciones  = false ;
         let flagCambieEstado = false ;
         if ( toggleInput && typeof toggleInput=="function" ){
-            toggleInput() ;
+            toggleInput(false, 'desde inicio parseAnswer') ;
             flagCambieEstado = true ;
-            console.log('....(A) cambie de estado el input ') ;
+            // console.log('....(A) cambie de estado el input ') ;
         }
+        */
         //
         let arrayOut     = [] ;
         let arrayAnswers = Array.isArray(answer) ? answer : new Array(answer);
         for ( let indArr=0; indArr<arrayAnswers.length; indArr++ ){
             let answerElem = arrayAnswers[ indArr ] ;
+            console.log('....parseAnswer:: indArr: ',indArr,' type:: ',answerElem.type) ;
             let parser    = allParsers[ answerElem.type ] || false ;
             if ( parser==false ){
                 throw new Error('ERROR: Answer type "'+answerElem.type+'" is unknown. Answer:: '+JSON.stringify(answerElem)) ;
             }
             //
-            if ( answerElem.type=="options" ){ flagHayOpciones = true; }
+            //  if ( answerElem.type=="options" ){ flagHayOpciones = true; }
             //
             arrayOut.push(
                 <div key={indArr} >
@@ -175,11 +188,13 @@ export const parseAnswer = ( argParams ) => {
             ) ;
         }
         //
+        /*
         if ( flagCambieEstado==true && flagHayOpciones==false ){
-            toggleInput() ;
+            toggleInput(true, 'fin de parse') ;
             flagCambieEstado = false ;
-            console.log('....ya ejecuteeeeee') ;
+            //console.log('....ya ejecuteeeeee') ;
         }
+        */
         //
         return arrayOut ;
     } catch(errPA){
