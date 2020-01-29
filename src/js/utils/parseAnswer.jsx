@@ -106,7 +106,11 @@ const parseOption   = (argAnswer,tempStyle,argKey,argOnClickOpcion,argToggleInpu
     let outEle = false ;
     try {
         if ( argAnswer.options.length>0 ){
-            argToggleInput(false,'desde define options: ') ;
+            if ( typeof argToggleInput=="function" ){
+                argToggleInput(false,'desde define options: ') ;
+            } else {
+                console.log('...no es funcion, que es?? argToggleInput:: ',argToggleInput) ;
+            }
         }
         outEle =    <div >
                         <span>{<ReactRenderDynamic text={argAnswer.text} />}</span>
@@ -172,7 +176,7 @@ export const parseAnswer = ( argParams ) => {
         let arrayAnswers = Array.isArray(answer) ? answer : new Array(answer);
         for ( let indArr=0; indArr<arrayAnswers.length; indArr++ ){
             let answerElem = arrayAnswers[ indArr ] ;
-            console.log('....parseAnswer:: indArr: ',indArr,' type:: ',answerElem.type) ;
+            // console.log('....parseAnswer:: indArr: ',indArr,' type:: ',answerElem.type) ;
             let parser    = allParsers[ answerElem.type ] || false ;
             if ( parser==false ){
                 throw new Error('ERROR: Answer type "'+answerElem.type+'" is unknown. Answer:: '+JSON.stringify(answerElem)) ;

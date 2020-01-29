@@ -40,7 +40,7 @@ export class CustomReply extends React.Component {
     wrapAnswer(elemOpt){
         try {
             //
-            console.log('....estoy en wrapAnswer:: ') ;
+            //console.log('....estoy en wrapAnswer:: ') ;
             let tempStyleMsg = {backgroundColor: '#E0E6E5',borderRadius: '10px',padding: '15px' } ;
             const { messageResponseStyle, timestamp } = this.props ;
             let tempStyle = messageResponseStyle ? messageResponseStyle : {} ;
@@ -65,7 +65,7 @@ export class CustomReply extends React.Component {
     //
     render(){
         //
-        console.log('....estoy en CustomReply::render ') ;
+        // console.log('....estoy en CustomReply::render ') ;
         let outDiv = this.wrapAnswer( this.state.answerAssistant ) ;
         return( outDiv ) ;
         //

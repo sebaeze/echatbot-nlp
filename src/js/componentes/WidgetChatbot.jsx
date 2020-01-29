@@ -120,7 +120,7 @@ export class WidgetChatbot extends Component {
     toggleMsgLoader();
     fetchChatbot({idAgente: this.props.configuration.idAgent,_id: this.state.idConversation,input:{text:newMessage} })
       .then((respBot)=>{
-        console.log('....handleNewUserMessage:: msg: ',newMessage) ;
+        //console.log('\n\n******* handleNewUserMessage:: msg: ----> ',newMessage) ;
           renderCustomComponent( CustomReply.bind(this) ,
                     {
                       datos: respBot ,
