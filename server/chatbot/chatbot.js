@@ -19,6 +19,7 @@ export const trainAsistente = (argLanguage,argTraining) => {
                     tempEntity[objTrain.entity] = objTrain.entity ;
                     manager.assignDomain( argLanguage, objTrain.entity , objTrain.domain );
                 }
+                if ( !objTrain.examples ){ objTrain.examples=[]; }
                 objTrain.examples.forEach((elemExample)=>{
                     try {
                         if ( elemExample && elemExample!=null ){
