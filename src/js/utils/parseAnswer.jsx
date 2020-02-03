@@ -10,12 +10,15 @@ import { MessageCarousel }                     from '../componentes/messages/Mes
 const ReactRenderDynamic = (argProps) => {
     const subs = /(^.*)(\$(.*))/.exec(argProps.text);
     // console.log('....subs: ',subs) ;
+    let tempText = String(argProps.text).replace(/\n/g, "<br />") ;
+    /*
     return(
         <div>
-            {argProps.text}
+            {tempText}
         </div>
     ) ;
-    // return( <div dangerouslySetInnerHTML={{__html: argProps.text}}></div> ) ;
+    */
+    return( <div dangerouslySetInnerHTML={{__html: tempText}}></div> ) ;
 } ;
 //
 const parseText     = (argAnswer,tempStyle,argKey,argOnClickOpcion, argToggleInput) => {
@@ -27,6 +30,7 @@ const parseText     = (argAnswer,tempStyle,argKey,argOnClickOpcion, argToggleInp
         outDiv = <p style={{...tempStyle,marginBottom:'0'}} key={argKey} >
             {
                 arrayAnswers.map((eleTT,idxTT)=>{
+                    eleTT = eleTT.replace(/\n/g, "<br />") ;
                     return( <span key={idxTT} style={{whiteSpace: 'pre-wrap'}}  >{eleTT}</span>)
                 })
             }
