@@ -5,6 +5,7 @@ const path                        = require('path');
 const webpack                     = require("webpack");
 const CompressionPlugin           = require('compression-webpack-plugin');
 const BrotliPlugin                = require('brotli-webpack-plugin');
+// const BundleAnalyzerPlugin        = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 /*
 const CopyWebpackPlugin           = require('copy-webpack-plugin');
 const HtmlWebpackPlugin           = require('html-webpack-plugin');
@@ -21,7 +22,7 @@ module.exports = {
   entry: './src/widget.js',
   output: {
     filename: 'widget.js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, '../dist')
   },
   module:{
 	   rules: [
@@ -74,24 +75,13 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx','.css'],
-    modules: [ path.join(__dirname,'./node_modules') ]
+    modules: [ path.join(__dirname,'../node_modules') ]
   },
   resolveLoader: {
-    modules: [ path.join(__dirname,'./node_modules') ]
-  },
-  devServer: {
-    port: 9000,
-    open: true,
-    proxy: {
-        "/": "http://localhost:3001"
-    },
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization, x-id, Content-Length, X-Requested-With",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS"
-    }
+    modules: [ path.join(__dirname,'../node_modules') ]
   },
   plugins: [
+    // new BundleAnalyzerPlugin(),
     new webpack.DefinePlugin({
       '__URL_BACKEND__': JSON.stringify(tempURLbackend)
     }),

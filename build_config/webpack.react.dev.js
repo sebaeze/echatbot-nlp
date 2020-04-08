@@ -12,7 +12,7 @@ module.exports = {
   entry: './src/widget.js',
   output: {
     filename: 'widget.js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, '../dist')
   },
   module:{
 	   rules: [
@@ -67,10 +67,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx','.css'],
-    modules: [ path.join(__dirname,'./node_modules') ]
+    modules: [ path.join(__dirname,'../node_modules') ]
   },
   resolveLoader: {
-    modules: [ path.join(__dirname,'./node_modules') ]
+    modules: [ path.join(__dirname,'../node_modules') ]
   },
   devServer: {
     port: 9001,

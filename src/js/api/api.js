@@ -37,7 +37,8 @@ export const fetchChatlog = (argQry) => {
             getOpt.method = 'GET' ;
             delete  getOpt.body ;
             //
-            let tempUrlBackend = __URL_BACKEND__ + '/chatbot/chatlog' + obj2qryString(argQry)+'&campos=conversation,unsubscribe' ;
+            let tempUrlBackend = String(__URL_BACKEND__).trim() + '/chatbot/chatlog' + obj2qryString(argQry)+'&campos=conversation,unsubscribe' ;
+            //
             fetch( tempUrlBackend ,getOpt)
                     .then(function(response){
                         if (response.status>=200 & response.status<=400) {
@@ -99,14 +100,14 @@ export const fetchChatbot = (argOpt) => {
             let postOpt  = {...opcionesPOST} ;
             postOpt.body = JSON.stringify( argOpt ) ;
             //
-            let tempUrlBackend = __URL_BACKEND__+'/chatbot/mensaje' ;
+            let tempUrlBackend = String(__URL_BACKEND__).trim()+'/chatbot/mensaje' ;
             // console.log('...tempUrlBackend: '+tempUrlBackend+';') ;
             fetch( tempUrlBackend ,postOpt)
                     .then(function(response){
                         if (response.status>=200 & response.status<=400) {
                             return response.json() ;
                         } else {
-                            throw new Error("ERROR: ADD Productos nuevos. Http Status: "+response.status+'.') ;
+                            throw new Error("ERROR: fetchChatbot. Http Status: "+response.status+'.') ;
                         }
                     }.bind(this))
                     .then(function(respNlp   ){

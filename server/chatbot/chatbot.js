@@ -1,15 +1,16 @@
  /*
 *
 */
-const { NlpManager }            = require('node-nlp')   ;
-import { userNavigator }        from 'echatbot-mongodb' ;
+const { NlpManager }               = require('node-nlp')      ;
+import { userNavigator }          from 'echatbot-mongodb'     ;
+import { VARIABLES_GLOBALES }     from '../dataModel/globals' ;
 //
 const cacheSessiones   = {} ;
 //
 export const trainAsistente = (argLanguage,argTraining) => {
     return new Promise(function(respOk,respRech){
         try {
-            const manager = new NlpManager({ languages: ['es', 'en', 'pt'] });
+            const manager = new NlpManager({ languages: ['es', 'en', 'pt'], nlu: { useNoneFeature: false } });
             // if ( !argTraining || Object.keys(argTraining).length==0 ||argTraining==false || argTraining=='false' ){ console.log('...voy a Training default');argTraining=defaultTraining; }
             let tempArrayTrain = typeof argTraining=="object" ? Object.values(argTraining) : argTraining ;
             let tempEntity     = {} ;
@@ -127,46 +128,57 @@ export const validateChatbotAgent = (argDb,argReq) => {
   return new Promise(function(respData,respRech){
     try {
         //
-        let chatbotStatus = {idChatbot:'', botName:'',botSubtitle: '',language: '',description: '',validation: '',idConversation: '',chatlog: [] } ;
         let idChatbot      = argReq.query.idChatbot      || argReq.body.idChatbot      || false ;
-        if ( idChatbot      && idChatbot=='false' ){ idChatbot=false; }
+        if ( idChatbot && idChatbot=='false' ){ idChatbot=false; }
+        let chatbotStatus  = {resultCode: VARIABLES_GLOBALES.RESULT_CODES.OK, idChatbot: idChatbot /* , botName:'',botSubtitle: '',language: '',description: '',validation: '',idConversation: '',chatlog: [] */} ;
         //
         argDb.chatbot.qry( {_id: idChatbot } )
-            .then((arrconversation)=>{
-                if ( arrconversation.length && arrconversation.length>0 ){ arrconversation=arrconversation[0]; }
-                let chatbotIpDomain = argReq.hostname || argReq.host || argReq.get('host') || argReq.headers["x-forwarded-for"] || argReq.connection.remoteAddress ||  false ;
-                chatbotIpDomain = chatbotIpDomain.toUpperCase() ;
-                //
-                let flagOk = false ;
-                if ( chatbotIpDomain.indexOf('LOCALHOST')!=-1 || chatbotIpDomain.indexOf('127.0.0.1')!=-1 ){
-                    flagOk = true ;
+            .then((arrBots)=>{
+                if ( arrBots.length==0 ) {
+                    chatbotStatus.resultCode = VARIABLES_GLOBALES.RESULT_CODES.CHATBOT_NOT_FOUND ;
+                    chatbotStatus.error      = `Chatbot id# ${idChatbot} not found` ;
+                    return [] ;
                 } else {
-                    if ( !arrconversation.websiteDomains || arrconversation.websiteDomains.length==0 ){ arrconversation.websiteDomains=[]; /* new Array(chatbotIpDomain);*/ }
-                    console.log('...../session:: ') ;
-                    console.dir(chatbotIpDomain) ;
-                    console.dir(arrconversation.websiteDomains) ;
-                    flagOk = arrconversation.websiteDomains.find((elemD)=>{ return String(chatbotIpDomain).toUpperCase().indexOf(String(elemD).toUpperCase())!=-1 ; }) ; // || false ;
+                    if ( arrBots.length && arrBots.length>0 ){ arrBots=arrBots[0]; }
+                    let chatbotIpDomain = argReq.hostname || argReq.host || argReq.get('host') || argReq.headers["x-forwarded-for"] || argReq.connection.remoteAddress ||  false ;
+                    chatbotIpDomain = chatbotIpDomain.toUpperCase() ;
+                    //
+                    let flagOk = false ;
+                    if ( chatbotIpDomain.indexOf('LOCALHOST')!=-1 || chatbotIpDomain.indexOf('127.0.0.1')!=-1 ){
+                        flagOk = true ;
+                    } else {
+                        if ( !arrBots.websiteDomains || arrBots.websiteDomains.length==0 ){ arrBots.websiteDomains=[]; /* new Array(chatbotIpDomain);*/ }
+                        console.log('...../session:: ') ;
+                        console.dir(chatbotIpDomain) ;
+                        console.dir(arrBots.websiteDomains) ;
+                        flagOk = arrBots.websiteDomains.find((elemD)=>{ return String(chatbotIpDomain).toUpperCase().indexOf(String(elemD).toUpperCase())!=-1 ; }) ; // || false ;
+                    }
+                    //
+                    chatbotStatus = {
+                            resultCode: VARIABLES_GLOBALES.RESULT_CODES.OK ,
+                            idChatbot: idChatbot,
+                            botName: arrBots.botName,
+                            botSubtitle: arrBots.botSubtitle,
+                            language: arrBots.language,
+                            description: arrBots.description,
+                            validation: (flagOk==false ? 'INVALID_WEBSITE_DOMAIN' : arrBots.status ),
+                            idConversation: '',
+                            options: arrBots.options || {},
+                            chatlog: []
+                    } ;
+                    //
+                    return getConversationIdChatlog(argDb,argReq) ;
+                    //
                 }
-                //
-                chatbotStatus = {
-                        idChatbot: idChatbot,
-                        botName: arrconversation.botName,
-                        botSubtitle: arrconversation.botSubtitle,
-                        language: arrconversation.language,
-                        description: arrconversation.description,
-                        validation: (flagOk==false ? 'INVALID_WEBSITE_DOMAIN' : arrconversation.status ),
-                        idConversation: '',
-                        options: arrconversation.options || {},
-                        chatlog: []
-                } ;
-                //
-                return getConversationIdChatlog(argDb,argReq) ;
-                //
             })
             .then((chatbotIdChatlog)=>{
                 //
-                chatbotStatus.idConversation = chatbotIdChatlog.idConversation ;
-                chatbotStatus.chatlog        = chatbotIdChatlog.chatlog ;
+                if ( chatbotStatus.resultCode==VARIABLES_GLOBALES.RESULT_CODES.OK ){
+                    chatbotStatus.idConversation = chatbotIdChatlog.idConversation ;
+                    chatbotStatus.chatlog        = chatbotIdChatlog.chatlog || [] ;
+                } else {
+                    chatbotStatus.validation = chatbotStatus.resultCode ;
+                }
                 respData( chatbotStatus ) ;
                 //
             })

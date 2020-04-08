@@ -166,7 +166,8 @@ module.exports = (argConfig,argDb) => {
             .then((respCB)=>{
               res.status(200) ;
               res.json({
-                status: 0,
+                status: respCB.resultCode,
+                resultCode: respCB.resultCode,
                 result: respCB
               }) ;
             })

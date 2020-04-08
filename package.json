@@ -1,8 +1,19 @@
 {
-  "name": "echatbot-nlp",
+  "name": "waiboc-react-widget",
   "version": "1.0.0",
-  "description": "widget for a chatbot with NLP.js",
-  "main": "indexs.js",
+  "description": "Waiboc widget for chatbot",
+  "main": "./dist/waiboc-react-widget.js",
+  "scripts": {
+    "build": "webpack  --mode production --config ./build_config/webpack.react.prod.js",
+    "build:npmDev": "SET    AMBIENTE=produccion && SET    URL_BACKEND=http://localhost:3001       && webpack  --mode production --config ./build_config/webpack.npm.js",
+    "build:npm": "export AMBIENTE=produccion && export URL_BACKEND=https://www.waiboc.com:3001 && webpack  --mode production --config ./build_config/webpack.npm.js",
+    "build:prod": "export AMBIENTE=produccion && export URL_BACKEND=https://www.waiboc.com:3001 && webpack  --mode production --config ./build_config/webpack.react.prod.js",
+    "postinstall": "npm install git+ssh://git@github.com/sebaeze/echatbot-mongodb.git",
+    "start": "babel-node ./server/server.js",
+    "start:react": "webpack-dev-server              --config ./build_config/webpack.react.dev.js",
+    "test:react-widget": "webpack-dev-server         --config ./build_config/webpack.react.widget.js",
+    "test": "babel-node ./test/conv"
+  },
   "dependencies": {
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.6.3",
@@ -20,6 +31,7 @@
     "body-parser": "^1.19.0",
     "brotli-webpack-plugin": "^1.1.0",
     "caniuse-lite": "^1.0.30001008",
+    "clean-webpack-plugin": "^3.0.0",
     "compression-webpack-plugin": "^3.0.1",
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.4",
@@ -40,7 +52,7 @@
     "moment-timezone": "^0.5.25",
     "mongodb": "^3.2.4",
     "mongoose": "^5.6.3",
-    "node-nlp": "^3.10.2",
+    "node-nlp": "^4.3.0",
     "path": "^0.12.7",
     "react": "^16.8.6",
     "react-chat-widget": "^2.1.5",
@@ -48,15 +60,8 @@
     "react-router-dom": "^5.0.1",
     "style-loader": "^0.23.1",
     "url-loader": "^2.0.0",
-    "webpack": "^4.30.0"
-  },
-  "scripts": {
-    "build": "webpack  --mode production --config webpack.react.prod.js",
-    "buildProd": "export AMBIENTE=produccion && export URL_BACKEND=https://www.waiboc.com:3001 && webpack  --mode production --config webpack.react.prod.js",
-    "postinstall": "npm install git+ssh://git@github.com/sebaeze/echatbot-mongodb.git",
-    "start": "babel-node ./server/server.js",
-    "start:react": "webpack-dev-server --config webpack.react.dev.js",
-    "test": "babel-node ./test/conv"
+    "webpack": "^4.30.0",
+    "webpack-bundle-analyzer": "^3.6.1"
   },
   "browserslist": [
     ">0.2%",

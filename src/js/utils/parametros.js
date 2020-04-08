@@ -2,14 +2,17 @@
 *
 */
 //
+import { VARIABLES_GLOBALES }         from '../../../server/dataModel/globals' ;
+//
 export const PARAMETROS   = {
+    RESULT_CODES: {...VARIABLES_GLOBALES.RESULT_CODES},
     CHATBOT_STATUS:{
         ACTIVE: 'ACTIVE',
         INACTIVE: 'INACTIVE'
     },
     BACKEND:{
-        API_CHATBOT: __URL_BACKEND__ + '/chatbot/qry',
-        API_SESSION: __URL_BACKEND__ + '/chatbot/session'
+        API_CHATBOT: String(__URL_BACKEND__).trim() + '/chatbot/qry',
+        API_SESSION: String(__URL_BACKEND__).trim() + '/chatbot/session'
     },
     SESSION:{
         ID_CONVERSATION:'WAIBOCIDCONVERSATION'

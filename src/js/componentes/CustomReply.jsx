@@ -10,8 +10,10 @@ import { DivMessage  }                         from './messages/DivMessage' ;
 import 'antd/dist/antd.css';
 //
 let userTimeZone = jstz.determine().name() ;
+/*
 let tempLang     = navigator.language || navigator.languages[0] || 'es' ;
 moment.locale(tempLang) ;
+*/
 //
 export class CustomReply extends React.Component {
     constructor(props){
