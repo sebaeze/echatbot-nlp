@@ -91,6 +91,7 @@ module.exports = (argConfig,argDb) => {
         res.setHeader("Access-Control-Allow-Credentials", true);
         //
         if ( API_NLP.NLP_TRAIN_SECRET==req.body.secretAPInlp ){
+          console.log('....reTrain de id: ',req.body.idAgente) ;
           chatbotAsistente.get( req.body.idAgente, true )
           .then((asistenteChatbot)=>{
             res.json({

@@ -182,7 +182,7 @@ export const validateChatbotAgent = (argDb,argReq) => {
                 respData( chatbotStatus ) ;
                 //
             })
-            .catch((errConv)=>{ conole.log('..ERROR catch valida chatbot:: errConv:');console.dir(errConv); respRech(errConv); }) ;
+            .catch((errConv)=>{ console.log('..ERROR catch valida chatbot:: errConv:');console.dir(errConv); respRech(errConv); }) ;
             //
     } catch(errVCB){
       respRech(errVCB) ;
