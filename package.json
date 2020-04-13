@@ -1,6 +1,6 @@
 {
   "name": "waiboc-react-widget",
-  "version": "1.0.0",
+  "version": "1.0.7",
   "description": "Waiboc widget for chatbot",
   "main": "./dist/waiboc-react-widget.js",
   "scripts": {
