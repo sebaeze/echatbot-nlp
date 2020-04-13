@@ -30,7 +30,7 @@ const parseText     = (argAnswer,tempStyle,argKey,argOnClickOpcion, argToggleInp
         outDiv = <p style={{...tempStyle,marginBottom:'0'}} key={argKey} >
             {
                 arrayAnswers.map((eleTT,idxTT)=>{
-                    eleTT = eleTT.replace(/\n/g, "<br />") ;
+                    //eleTT = eleTT.replace(/\n/g, "<br />") ;
                     return( <span key={idxTT} style={{whiteSpace: 'pre-wrap'}}  >{eleTT}</span>)
                 })
             }

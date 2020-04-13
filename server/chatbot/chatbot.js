@@ -10,7 +10,7 @@ const cacheSessiones   = {} ;
 export const trainAsistente = (argLanguage,argTraining) => {
     return new Promise(function(respOk,respRech){
         try {
-            const manager = new NlpManager({ languages: ['es', 'en', 'pt'], nlu: { useNoneFeature: false } });
+            const manager = new NlpManager({ languages: ['es', 'en', 'pt'], nlu: { useNoneFeature: true } });
             // if ( !argTraining || Object.keys(argTraining).length==0 ||argTraining==false || argTraining=='false' ){ console.log('...voy a Training default');argTraining=defaultTraining; }
             let tempArrayTrain = typeof argTraining=="object" ? Object.values(argTraining) : argTraining ;
             let tempEntity     = {} ;

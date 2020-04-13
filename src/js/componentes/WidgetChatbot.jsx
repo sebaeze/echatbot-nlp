@@ -10,7 +10,7 @@ import { fetchChatbot }                                          from '../api/ap
 import 'react-chat-widget/lib/styles.css' ;
 import '../../css/estiloChat.css' ;
 //
-import logoSVG                                                     from '../../img/waiboc.logo.svg';
+// import logoSVG                                                     from '../../img/waiboc.logo.svg';
 let flagInputDisable = true ;
 //
 export class WidgetChatbot extends Component {
@@ -37,32 +37,33 @@ export class WidgetChatbot extends Component {
   componentDidMount(){
     try {
       //
+      /*
       if ( this.props.conversation.chatlog.length==0 ){
-        this.handleNewUserMessage( 'WELCOME.INITIAL' ) ;
-      } else {
-        toggleMsgLoader();
-        let tempChatlog = this.props.conversation.chatlog.sort( (a,b)=>{ return a.ts.localeCompare(b.ts); }) ;
-        for (let icl=0; icl<tempChatlog.length; icl++){
-          let objConv = tempChatlog[icl] ;
-          if ( objConv.intent  && String(objConv.intent).length>0 ){
-            if ( objConv.userMessage && objConv.userMessage.text && String(objConv.userMessage.text)!="undefined" && objConv.userMessage.text!=objConv.intent ){
-              addUserMessage( String(objConv.userMessage.text) ) ;
-            }
-            renderCustomComponent( CustomReply.bind(this) ,
-                                {
-                                  datos: objConv.answer ,
-                                  timestamp: objConv.ts,
-                                  onClickOpcion:this.onClickOpcion.bind(this),
-                                  addMsg: addResponseMessage.bind(this) ,
-                                  windowStyle: this.props.configuration.windowStyle,
-                                  onOpen: this.chatOpenedHandler ,
-                                  onClose: this.chatClosedHandler,
-                                  // ,toggleInput: toggleInputDisabled.bind(this)
-                                }, false ) ;
-          }
-        }
-        toggleMsgLoader() ;
+        this.handleNewUserMessage( 'ON_OPEN_WIDGET' ) ;
       }
+      */
+      toggleMsgLoader();
+      let tempChatlog = this.props.conversation.chatlog.sort( (a,b)=>{ return a.ts.localeCompare(b.ts); }) ;
+      for (let icl=0; icl<tempChatlog.length; icl++){
+        let objConv = tempChatlog[icl] ;
+        if ( objConv.intent  && String(objConv.intent).length>0 ){
+          if ( objConv.userMessage && objConv.userMessage.text && String(objConv.userMessage.text)!="undefined" && objConv.userMessage.text!=objConv.intent ){
+            addUserMessage( String(objConv.userMessage.text) ) ;
+          }
+          renderCustomComponent( CustomReply.bind(this) ,
+                              {
+                                datos: objConv.answer ,
+                                timestamp: objConv.ts,
+                                onClickOpcion:this.onClickOpcion.bind(this),
+                                addMsg: addResponseMessage.bind(this) ,
+                                windowStyle: this.props.configuration.windowStyle,
+                                onOpen: this.chatOpenedHandler ,
+                                onClose: this.chatClosedHandler,
+                                // ,toggleInput: toggleInputDisabled.bind(this)
+                              }, false ) ;
+        }
+      }
+      toggleMsgLoader() ;
       //
     } catch(errDM){
       console.dir(errDM) ;
@@ -90,6 +91,7 @@ export class WidgetChatbot extends Component {
   chatOpenedHandler(){
     if ( this.state.chatOpen!=true ){
       this.props.onWindowOpen() ;
+      this.handleNewUserMessage( 'ON_OPEN_WIDGET' ) ;
       this.setState({chatOpen: true, pendientes: 0}) ;
     }
   }
@@ -169,7 +171,7 @@ export class WidgetChatbot extends Component {
             showCloseButton={true}
             badge={this.state.pendientes}
             autofocus={true}
-            profileAvatar={logoSVG}
+            // profileAvatar={logoSVG}
           />
       </div>
       )
