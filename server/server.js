@@ -12,7 +12,7 @@ const session          = require('express-session') ;
 const MongoStore       = require('connect-mongo')(session);
 //
 //const dbClass          = require('./db/dbIndex').bases ;
-import { bases as dbClass }   from 'echatbot-mongodb' ;
+import { bases as dbClass }   from '@sebaeze/echatbot-mongodb' ;
 import configuracionApp       from './config/general.json' ;
 //
 if ( !process.env.AMBIENTE ){ process.env.AMBIENTE="dev"; }

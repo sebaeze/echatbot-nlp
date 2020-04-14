@@ -2,7 +2,7 @@
 *
 */
 const router                    = require('express').Router()   ;
-import { userNavigator }        from 'echatbot-mongodb' ;
+import { userNavigator }        from '@sebaeze/echatbot-mongodb' ;
 import { assistantManager, validateChatbotAgent }     from '../chatbot/chatbot' ;
 //
 module.exports = (argConfig,argDb) => {
@@ -56,6 +56,7 @@ module.exports = (argConfig,argDb) => {
             res.json( resuAnswer ) ;
           })
           .then((resuAnswer)=>{
+            /*
             let usageEntity = {} ;
             if ( String(answerBot.intent).toUpperCase()!="NONE" ){
               usageEntity = {
@@ -65,7 +66,18 @@ module.exports = (argConfig,argDb) => {
                 }
               } ;
             }
-            return argDb.chatbot.incrementChatbotUsage( { _id: req.body.idAgente,qty: 1, ...usageEntity } ) ;
+            */
+            let objUpdater = { qty: 1 ,
+              idChatbot: req.body.idAgente,
+              intent: answerBot.intent||answerBot.name||answerBot.name,
+              searchText: req.body.input.text
+            };
+            if ( process.env.AMBIENTE!='produccion' ){
+              console.log('.......voy a increment:: updater:: ',objUpdater) ;
+            }
+            //
+            return argDb.chatbot.incrementChatbotUsage( objUpdater ) ;
+            //
           })
           .then((resuQty)=>{
             /* */

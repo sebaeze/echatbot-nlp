@@ -2,36 +2,40 @@
 *
 */
 const { NlpManager }               = require('node-nlp')      ;
-import { userNavigator }          from 'echatbot-mongodb'     ;
+import { userNavigator }          from '@sebaeze/echatbot-mongodb'     ;
 import { VARIABLES_GLOBALES }     from '../dataModel/globals' ;
 //
 const cacheSessiones   = {} ;
 //
-export const trainAsistente = (argLanguage,argTraining) => {
+// export const trainAsistente = (argLanguage,argTraining) => {
+export const trainAsistente = ( argOptions ) => {
     return new Promise(function(respOk,respRech){
         try {
+            const { intents, chatbotLanguage } = argOptions ;
             const manager = new NlpManager({ languages: ['es', 'en', 'pt'], nlu: { useNoneFeature: true } });
             // if ( !argTraining || Object.keys(argTraining).length==0 ||argTraining==false || argTraining=='false' ){ console.log('...voy a Training default');argTraining=defaultTraining; }
-            let tempArrayTrain = typeof argTraining=="object" ? Object.values(argTraining) : argTraining ;
+            //let tempArrayTrain = typeof argTraining=="object" ? Object.values(argTraining) : argTraining ;
+            let tempArrayTrain = typeof intents=="object" ? Object.values(intents) : intents ;
             let tempEntity     = {} ;
             for( let ix=0; ix<tempArrayTrain.length;ix++){
-                let objTrain = tempArrayTrain[ix] ;
+                let objTrain     = tempArrayTrain[ix] ;
+                let tempLanguage = objTrain.language ? objTrain.language : chatbotLanguage ;
                 if ( !tempEntity[objTrain.domain] ){
                     tempEntity[objTrain.entity] = objTrain.entity ;
-                    manager.assignDomain( argLanguage, objTrain.entity , objTrain.domain );
+                    manager.assignDomain( tempLanguage, objTrain.entity , objTrain.domain );
                 }
                 if ( !objTrain.examples ){ objTrain.examples=[]; }
                 objTrain.examples.forEach((elemExample)=>{
                     try {
                         if ( elemExample && elemExample!=null ){
-                            manager.addDocument( argLanguage , elemExample , objTrain.entity );
+                            manager.addDocument( tempLanguage , elemExample , objTrain.entity );
                         }
                     } catch(errADDd){
                         console.log('....ERROR: addDocumento:: train:: errADDd: ',errADDd,' \n objTrain: ',objTrain) ;
                     }
                 }) ;
                 try {
-                    manager.addAnswer( argLanguage , objTrain.entity , objTrain.answer );
+                    manager.addAnswer( tempLanguage , objTrain.entity , objTrain.answer );
                 } catch(errADDd){
                     console.log('....ERROR: addAnswer:: train:: errADDd: ',objTrain) ;
                 }
@@ -71,7 +75,7 @@ export const assistantManager = (argDb) => {
                         .then((respAsis)=>{
                             if ( respAsis.length>0 ){ respAsis=respAsis[0]; }
                             if ( !respAsis.training ){ respAsis.training=false; }
-                            cacheSessiones[argIdAgente] = trainAsistente(respAsis.language,respAsis.training) ;
+                            cacheSessiones[argIdAgente] = trainAsistente({ intents: respAsis.training, chatbotLanguage: respAsis.language }) ;
                             respOk( cacheSessiones[argIdAgente] ) ;
                         })
                         .catch((respErr)=>{
