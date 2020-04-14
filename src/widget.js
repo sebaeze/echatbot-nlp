@@ -1,12 +1,15 @@
 /*
 *
 */
-import React                                             from "react"         ;
-import ReactDOM                                          from "react-dom"     ;
-import ls                                                from 'local-storage' ;
-import { WidgetChatbot }                                 from "./js/componentes/WidgetChatbot" ;
-import { CustomReply   }                                 from "./js/componentes/CustomReply"   ;
-import { getChatbotInfo, getIdConversation, PARAMETROS } from "./js/api/api" ;
+import React                                               from "react"         ;
+import ReactDOM                                            from "react-dom"     ;
+import ls                                                  from 'local-storage' ;
+import { WaibocReactWidget as WidgetChatbot }              from 'waiboc-widget-react' ;
+import { getChatbotInfo, getIdConversation, PARAMETROS }   from "waiboc-widget-react" ;
+//
+// import { getChatbotInfo, getIdConversation, PARAMETROS }   from "./js/api/api" ;
+// import { WidgetChatbot }                                 from "./js/componentes/WidgetChatbot" ;
+// import { CustomReply   }                                   from "./js/componentes/CustomReply"   ;
 //
 const domNodeWidget = () => {
   let outDiv ;
@@ -91,7 +94,6 @@ const initChatbotWidget = (argConfigBot) => {
 //
 window.waiboc = {
   initChatbotWidget: initChatbotWidget ,
-  widgetVisible: widgetVisible ,
-  CustomReply: CustomReply
+  widgetVisible: widgetVisible
 } ;
 //
