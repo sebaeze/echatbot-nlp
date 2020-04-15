@@ -115,10 +115,18 @@ export const getConversationIdChatlog = (argDb,argReq) => {
              } else {
                 let tempUserNavigator   = Object.assign({...userNavigator},argReq.headers) ;
                 tempUserNavigator.ip    = argReq.ip || '' ;
+                let respValidd = {} ;
                 argDb.conversacion.add( idChatbot ,tempUserNavigator,{ userMessage: '', answer: {output: { type: 'text', answer: [''] } } } )
                     .then((respChatMsg)=>{
                         if ( respChatMsg.length && respChatMsg.length>0 ){ respChatMsg=respChatMsg[0]; }
-                        respData({ idConversation: respChatMsg._id, chatlog: [] }) ;
+                        //respData({ idConversation: respChatMsg._id, chatlog: [] }) ;
+                        respValidd = { idConversation: respChatMsg._id, chatlog: [], chatEvents: [] } ;
+                        return argDb.intents.qry({ idChatbot: idChatbot, systemDefined: true, campos:{idChatbot:1,name:1,systemDefined:1,answer:1} }) ;
+                    })
+                    .then((respSysDefined)=>{
+                        console.log('....respSysDefined: ',respSysDefined) ;
+                        respValidd.chatEvents = respSysDefined || []
+                        respData( respValidd ) ;
                     })
                     .catch((errChatlog)=>{ respRech(errChatlog) ; }) ;
              }
@@ -180,6 +188,7 @@ export const validateChatbotAgent = (argDb,argReq) => {
                 if ( chatbotStatus.resultCode==VARIABLES_GLOBALES.RESULT_CODES.OK ){
                     chatbotStatus.idConversation = chatbotIdChatlog.idConversation ;
                     chatbotStatus.chatlog        = chatbotIdChatlog.chatlog || [] ;
+                    chatbotStatus.chatEvents     = chatbotIdChatlog.chatEvents || [] ;
                 } else {
                     chatbotStatus.validation = chatbotStatus.resultCode ;
                 }
