@@ -31,18 +31,20 @@ module.exports = (argConfig,argDb) => {
         res.header('Access-Control-Allow-Headers', 'content-type');
         res.setHeader("Access-Control-Allow-Credentials", true);
         //
-        let answerBot = false ;
+        let answerBot        = false ;
+        let asistenteChatbot = {} ;
+        //
         chatbotAsistente.get( req.body.idAgente )
-          .then((asistenteChatbot)=>{
+          .then((respBotAsistente)=>{
+            asistenteChatbot = respBotAsistente ;
             return asistenteChatbot.process( req.body.input.text ) ;
           })
           .then((resuBot)=>{
-            if ( process.env.AMBIENTE!='produccion' ){
-              console.log('.....resuBot:: ',resuBot) ;
-            }
-            //
             answerBot = {...resuBot} ;
-            let tempRespuesta     = resuBot.answer ? {output: {...resuBot.answer}} : {output: { type: 'text', answer: ['No hay polque, no respuesta'] } } ;
+            let tempRespuesta = {output: resuBot.answer ? {...resuBot.answer} : false } ; //asistenteChatbot.chatEvents['None']||{}
+            if ( tempRespuesta.output==false ){
+                tempRespuesta.output = (asistenteChatbot.chatEvents['None'] && asistenteChatbot.chatEvents['None'].answer) ? asistenteChatbot.chatEvents['None'].answer : {} ;
+            }
             let tempUserNavigator = {...userNavigator} ;
             tempUserNavigator     = Object.assign(tempUserNavigator,req.headers) ;
             tempUserNavigator.ip  = req.ip || '' ;
@@ -56,28 +58,12 @@ module.exports = (argConfig,argDb) => {
             res.json( resuAnswer ) ;
           })
           .then((resuAnswer)=>{
-            /*
-            let usageEntity = {} ;
-            if ( String(answerBot.intent).toUpperCase()!="NONE" ){
-              usageEntity = {
-                entity: {
-                  qty: 1,
-                  name: answerBot.intent
-                }
-              } ;
-            }
-            */
             let objUpdater = { qty: 1 ,
               idChatbot: req.body.idAgente,
               intent: answerBot.intent||answerBot.name||answerBot.name,
               searchText: req.body.input.text
             };
-            if ( process.env.AMBIENTE!='produccion' ){
-              console.log('.......voy a increment:: updater:: ',objUpdater) ;
-            }
-            //
             return argDb.chatbot.incrementChatbotUsage( objUpdater ) ;
-            //
           })
           .then((resuQty)=>{
             /* */

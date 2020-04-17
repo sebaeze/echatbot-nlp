@@ -17,6 +17,8 @@ export const trainAsistente = ( argOptions ) => {
             //let tempArrayTrain = typeof argTraining=="object" ? Object.values(argTraining) : argTraining ;
             let tempArrayTrain = typeof intents=="object" ? Object.values(intents) : intents ;
             let tempEntity     = {} ;
+            manager.chatEvents = {} ;
+            //
             for( let ix=0; ix<tempArrayTrain.length;ix++){
                 let objTrain     = tempArrayTrain[ix] ;
                 let tempLanguage = objTrain.language ? objTrain.language : chatbotLanguage ;
@@ -25,6 +27,11 @@ export const trainAsistente = ( argOptions ) => {
                     manager.assignDomain( tempLanguage, objTrain.entity , objTrain.domain );
                 }
                 if ( !objTrain.examples ){ objTrain.examples=[]; }
+                //
+                if ( objTrain.systemDefined==true ){
+                    manager.chatEvents[ objTrain.name ] = objTrain ;
+                }
+                //
                 objTrain.examples.forEach((elemExample)=>{
                     try {
                         if ( elemExample && elemExample!=null ){
@@ -71,7 +78,7 @@ export const assistantManager = (argDb) => {
                     respOk( cacheAsistente ) ;
                 } else {
                     cacheSessiones[argIdAgente] = {} ;
-                    argDb.chatbot.qry( {_id:argIdAgente} )
+                    argDb.chatbot.qry( {_id:argIdAgente,camposTraining:{_id:1,idChatbot:1,name:1,systemDefined:1,domain:1,examples:1,entity:1,answer:1} } )
                         .then((respAsis)=>{
                             if ( respAsis.length>0 ){ respAsis=respAsis[0]; }
                             if ( !respAsis.training ){ respAsis.training=false; }
@@ -124,7 +131,7 @@ export const getConversationIdChatlog = (argDb,argReq) => {
                         return argDb.intents.qry({ idChatbot: idChatbot, systemDefined: true, campos:{idChatbot:1,name:1,systemDefined:1,answer:1} }) ;
                     })
                     .then((respSysDefined)=>{
-                        console.log('....respSysDefined: ',respSysDefined) ;
+                        // console.log('....respSysDefined: ',respSysDefined) ;
                         respValidd.chatEvents = respSysDefined || []
                         respData( respValidd ) ;
                     })
