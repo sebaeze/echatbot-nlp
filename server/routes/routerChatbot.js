@@ -37,9 +37,20 @@ module.exports = (argConfig,argDb) => {
         chatbotAsistente.get( req.body.idAgente )
           .then((respBotAsistente)=>{
             asistenteChatbot = respBotAsistente ;
-            return asistenteChatbot.process( req.body.input.text ) ;
+            // console.log('....process: entity:: req.body.input ',req.body.input /* ,' asistenteChatbot: ',asistenteChatbot*/ ) ;
+            if ( req.body.input.text ){
+              return asistenteChatbot.process( req.body.input.text ) ;
+            } else {
+              // return asistenteChatbot.process( req.body.input.intent ) ;
+              return argDb.intents.qry({idChatbot: req.body.idAgente, entity: req.body.input.intent, campos: {idChatbot:1,answer:1,entity:1,} }) ;
+            }
           })
           .then((resuBot)=>{
+            //
+            if ( Array.isArray(resuBot) && resuBot.length>0 ){ resuBot=resuBot[0];   } ;
+            if ( !resuBot.intent && resuBot.entity ){ resuBot.intent=resuBot.entity; } ;
+            // console.log('....(B) resuBot: ',resuBot) ;
+            //
             answerBot = {...resuBot} ;
             let tempRespuesta = {output: resuBot.answer ? {...resuBot.answer} : false } ; //asistenteChatbot.chatEvents['None']||{}
             if ( tempRespuesta.output==false ){
