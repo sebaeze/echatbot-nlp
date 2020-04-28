@@ -15,7 +15,7 @@
     "@babel/node": "^7.6.3",
     "@babel/plugin-proposal-class-properties": "^7.5.0",
     "@babel/plugin-syntax-export-namespace-from": "^7.2.0",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.0.0",
     "@sebaeze/echatbot-mongodb": "git+ssh://git@github.com/sebaeze/echatbot-mongodb.git",
     "antd": "^3.25.0",
@@ -56,7 +56,7 @@
     "react-router-dom": "^5.0.1",
     "style-loader": "^0.23.1",
     "url-loader": "^2.0.0",
-    "waiboc-widget-react": "^1.0.22",
+    "waiboc-widget-react": "^1.0.24",
     "webpack": "^4.30.0",
     "webpack-bundle-analyzer": "^3.6.1"
   },
