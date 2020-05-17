@@ -76,6 +76,7 @@ module.exports = {
     port: 9003,
     open: true,
     //open: true,
+    host: '0.0.0.0',
     headers: {
       "Access-Control-Allow-Credentials": true,
       "Access-Control-Allow-Origin": "*",
