@@ -12,7 +12,7 @@ export const trainAsistente = ( argOptions ) => {
     return new Promise(function(respOk,respRech){
         try {
             const { intents, chatbotLanguage } = argOptions ;
-            const manager = new NlpManager({ languages: ['es', 'en', 'pt'], nlu: { useNoneFeature: true } });
+            const manager = new NlpManager({ languages: ['es', 'en', 'pt'], nlu: { log: false, useNoneFeature: true } });
             // if ( !argTraining || Object.keys(argTraining).length==0 ||argTraining==false || argTraining=='false' ){ console.log('...voy a Training default');argTraining=defaultTraining; }
             //let tempArrayTrain = typeof argTraining=="object" ? Object.values(argTraining) : argTraining ;
             let tempArrayTrain = typeof intents=="object" ? Object.values(intents) : intents ;
