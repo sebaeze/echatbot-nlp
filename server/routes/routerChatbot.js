@@ -34,7 +34,6 @@ module.exports = (argConfig,argDb) => {
         //
         let answerBot        = false ;
         let asistenteChatbot = {} ;
-        //
         chatbotAsistente.get( req.body.idAgente )
           .then((respBotAsistente)=>{
             asistenteChatbot = respBotAsistente ;
@@ -61,7 +60,8 @@ module.exports = (argConfig,argDb) => {
               } ;
             }
             if ( tempRespuesta.output==false ){
-                tempRespuesta.output = (asistenteChatbot.chatEvents['None'] && asistenteChatbot.chatEvents['None'].answer) ? asistenteChatbot.chatEvents['None'].answer : {} ;
+                tempRespuesta.output = (asistenteChatbot.nlp.chatEvents['None'] && asistenteChatbot.nlp.chatEvents['None'].answer)
+                                        ? asistenteChatbot.nlp.chatEvents['None'].answer : {} ;
             }
             let tempUserNavigator = {...userNavigator} ;
             tempUserNavigator     = Object.assign(tempUserNavigator,req.headers) ;
