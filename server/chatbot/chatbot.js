@@ -30,7 +30,9 @@ export const updateBotOutput = (argAnswer,argContext) => {
             }
         }
         //
-        outUpdated.answer.text = outUpdated.answer.text.replace(EOF_LINE,"") ;
+        if ( outUpdated && outUpdated.answer && outUpdated.answer.text){
+            outUpdated.answer.text = outUpdated.answer.text.replace(EOF_LINE,"") ;
+        }
         //
         return outUpdated ;
     } catch(errRV){
