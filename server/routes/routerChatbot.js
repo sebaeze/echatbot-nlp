@@ -4,6 +4,7 @@
 const router                    = require('express').Router()   ;
 import { userNavigator }        from '@sebaeze/echatbot-mongodb' ;
 import { assistantManager, validateChatbotAgent }     from '../chatbot/chatbot' ;
+import { updateBotOutput, EOF_LINE }                  from '../chatbot/chatbot' ;
 //
 module.exports = (argConfig,argDb) => {
     //
@@ -37,22 +38,28 @@ module.exports = (argConfig,argDb) => {
         chatbotAsistente.get( req.body.idAgente )
           .then((respBotAsistente)=>{
             asistenteChatbot = respBotAsistente ;
-            // console.log('....process: entity:: req.body.input ',req.body.input /* ,' asistenteChatbot: ',asistenteChatbot*/ ) ;
             if ( req.body.input.text ){
-              return asistenteChatbot.process( req.body.input.text ) ;
+              return asistenteChatbot.nlp.process( 'es' , req.body.input.text+EOF_LINE , asistenteChatbot.context ) ;
             } else {
-              // return asistenteChatbot.process( req.body.input.intent ) ;
               return argDb.intents.qry({idChatbot: req.body.idAgente, entity: req.body.input.intent, campos: {idChatbot:1,answer:1,entity:1,} }) ;
             }
           })
+          .then((outBotAns)=>{
+            return updateBotOutput(outBotAns,asistenteChatbot.context) ;
+          })
           .then((resuBot)=>{
             //
+            // console.log('....resuBot: ',resuBot,' conext:: ',asistenteChatbot.context) ;
             if ( Array.isArray(resuBot) && resuBot.length>0 ){ resuBot=resuBot[0];   } ;
             if ( !resuBot.intent && resuBot.entity ){ resuBot.intent=resuBot.entity; } ;
-            // console.log('....(B) resuBot: ',resuBot) ;
             //
             answerBot = {...resuBot} ;
-            let tempRespuesta = {output: resuBot.answer ? {...resuBot.answer} : false } ; //asistenteChatbot.chatEvents['None']||{}
+            let tempRespuesta = {output: resuBot.answer ? {...resuBot.answer} : false }; // ( resuBot.srcAnswer ? resuBot.srcAnswer : false ) } ; //asistenteChatbot.chatEvents['None']||{}
+            if ( resuBot.slotFill && resuBot.srcAnswer ){
+              tempRespuesta = {
+                output: resuBot.srcAnswer
+              } ;
+            }
             if ( tempRespuesta.output==false ){
                 tempRespuesta.output = (asistenteChatbot.chatEvents['None'] && asistenteChatbot.chatEvents['None'].answer) ? asistenteChatbot.chatEvents['None'].answer : {} ;
             }
