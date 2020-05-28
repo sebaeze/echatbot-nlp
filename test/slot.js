@@ -41,6 +41,16 @@ const argMng  = new NlpManager({
                         */
                     }) ;
 //
+/*
+const hola = (argT) => {
+    console.log('......holaaaa:: arg: '+argT+';') ;
+} ;
+argMng.container.register('Hola', hola, false) ;
+console.log('....(B) nlpMngContainer.hola: ',argMng.Hola) ;
+argMng.nlp.Hola() ;
+return false ;
+*/
+//
 main = async () => {
     //
     // argMng.addDocument( 'es' , 'la ciudad se llama %userCiudad% aca' , 'tu.ciudad' ) ;
@@ -81,6 +91,12 @@ main = async () => {
     argMng.addDocument( 'es' , 'mi nombre es' , 'tu.nombre'  ) ;
     argMng.addDocument( 'es' , 'mi nombre es %miNombre% abcde' , 'tu.nombre' ) ;
     argMng.addAnswer(   'es' , 'tu.nombre' , 'holaa ##miNombre## ' );
+    //
+    argMng.addAction('tu.nombre', 'getNombre', '', (input) => {
+        console.log('....getNommmm:: input: ',input,';') ;
+        return input ;
+        // return `${input.answer} sunny` ;
+    });
     //
     //argMng.addDocument( 'es' , 'mi nombre es  %miNombre% aca' , 'tu.nombre' ) ;
     // argMng.addAnswer(   'es' , 'chau' , '...tu estas en {{userCiudad}} ...' );
