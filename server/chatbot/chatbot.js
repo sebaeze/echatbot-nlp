@@ -48,7 +48,7 @@ export const updateBotOutput = (argAnswer,argContext) => {
     }
 }
 //
-const addTrimmedVariables = (argMng,argEntity,argLang,argText,argSlots) => {
+const addTrimmedVariables = (argMng,argEntity,argLang,argText) => {
     let outResult = {text: argText} ;
     try {
         //
@@ -76,6 +76,8 @@ const addTrimmedVariables = (argMng,argEntity,argLang,argText,argSlots) => {
                 argMng.addBetweenCondition( argLang , elemVar , arrBetween[0].trim() , EOF_LINE.trim() ) ;
                }
             }
+            // console.log('....(a) addTrimmedVariables: argEntity: ',argEntity,' elemVar: ',elemVar,';') ;
+            /*
             // Search if the Slot is available
             let arraySlots = argSlots.filter((elemSlot)=>{
                 return ("##"+elemSlot.name+"##").toUpperCase()==elemVar.toUpperCase() ;
@@ -84,6 +86,7 @@ const addTrimmedVariables = (argMng,argEntity,argLang,argText,argSlots) => {
             arraySlots.forEach((slot2Add)=>{
                 addSlotToBot(argMng,argEntity,slot2Add) ;
             })
+            */
             //
             /*
             let objEntity = {} ;
@@ -108,14 +111,13 @@ const addSlotToBot = (argMng,argEntity,argSlot) => {
         if ( argSlot.name.substr(0,2)!="##" ){ argSlot.name="##"+argSlot.name; }
         if ( argSlot.name.substr((argSlot.name.length-2),2)!="##" ){ argSlot.name=argSlot.name+"##"; }
         //
-        // console.log('...argEntity: ',argEntity,' argSlot: ',argSlot.name) ;
-        //
         let objSlot2Add = {} ;
         objSlot2Add[ argSlot.language ] = {
             api: '',
             text: argSlot.question ,
             files: []
         } ;
+        // console.log('.....(B) addSlotToBot: argEntity: ',argEntity,' argSlot.name: ',argSlot.name,';') ;
         argMng.nlp.slotManager.addSlot( argEntity, argSlot.name , true,  objSlot2Add ) ;
         //
     } catch(errADV){
@@ -126,7 +128,7 @@ const addSlotToBot = (argMng,argEntity,argSlot) => {
 export const trainAsistente = ( argOptions ) => {
     return new Promise(function(respOk,respRech){
         try {
-            const { intents, chatbotLanguage, slots } = argOptions ;
+            const { intents, chatbotLanguage } = argOptions ;
             const manager = new NlpManager({
                             languages: ['es', 'en', 'pt'],
                             nlu: { log: false, useNoneFeature: true }
@@ -160,7 +162,7 @@ export const trainAsistente = ( argOptions ) => {
                     try {
                         if ( elemExample && elemExample!=null ){
                             if ( elemExample.indexOf('##')!=-1 ){
-                                let resuAddVar = addTrimmedVariables(manager,objTrain.entity,tempLanguage,elemExample,slots) ;
+                                let resuAddVar = addTrimmedVariables(manager,objTrain.entity,tempLanguage,elemExample) ;
                                 elemExample = resuAddVar.text ;
                             }
                             manager.addDocument( tempLanguage , elemExample , objTrain.entity );
@@ -169,18 +171,24 @@ export const trainAsistente = ( argOptions ) => {
                         console.log('....ERROR: addDocumento:: train:: errADDd: ',errADDd,' \n objTrain: ',objTrain) ;
                     }
                 }) ;
+                // Slots Filling
+                try {
+                    // console.log('.1_objTrain.entity: ',objTrain.entity,' objTrain.slots: ',objTrain.slots) ;
+                    if ( objTrain.slots && objTrain.slots.length>0 ){
+                        for ( let posS=0; posS<objTrain.slots.length; posS++ ){
+                            addSlotToBot( manager , objTrain.entity , objTrain.slots[posS] ) ;
+                        }
+                    }
+                } catch(errAS){
+                    console.log('...errAS: ',errAS) ;
+                }
+                //
                 try {
                     manager.addAnswer( tempLanguage , objTrain.entity , objTrain.answer );
                 } catch(errADDd){
                     console.log('....ERROR: addAnswer:: train:: errADDd: ',objTrain) ;
                 }
             }
-            //
-            /*
-            for ( let posS=0; posS<slots.length; posS++ ){
-                addSlotToBot( manager, slots[posS] ) ;
-            }
-            */
             //
             manager.train()
                 .then((respTrain)=>{
@@ -212,11 +220,11 @@ export const assistantManager = (argDb) => {
                     respOk( cacheAsistente ) ;
                 } else {
                     cacheSessiones[argIdAgente] = {} ;
-                    argDb.chatbot.qry( {_id:argIdAgente,slots: true,camposTraining:{_id:1,idChatbot:1,name:1,systemDefined:1,domain:1,examples:1,entity:1,answer:1} } )
+                    argDb.chatbot.qry( {_id:argIdAgente, camposTraining:{_id:1,idChatbot:1,name:1,systemDefined:1,domain:1,examples:1,entity:1,answer:1, slots:1} } )
                         .then((respAsis)=>{
                             if ( respAsis.length>0 ){ respAsis=respAsis[0]; }
                             if ( !respAsis.training ){ respAsis.training=false; }
-                            cacheSessiones[argIdAgente] = trainAsistente({ intents: respAsis.training, slots: respAsis.slots, chatbotLanguage: respAsis.language }) ;
+                            cacheSessiones[argIdAgente] = trainAsistente({ intents: respAsis.training, chatbotLanguage: respAsis.language }) ;
                             respOk( cacheSessiones[argIdAgente] ) ;
                         })
                         .catch((respErr)=>{
