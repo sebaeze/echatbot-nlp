@@ -59,6 +59,7 @@ module.exports = (argConfig,argDb) => {
                 output: resuBot.srcAnswer
               } ;
             }
+            // console.log('...none:: answerBot: ',answerBot) ;
             if ( tempRespuesta.output==false ){
                 tempRespuesta.output = (asistenteChatbot.nlp.chatEvents['None'] && asistenteChatbot.nlp.chatEvents['None'].answer)
                                         ? asistenteChatbot.nlp.chatEvents['None'].answer : {} ;

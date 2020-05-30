@@ -15,9 +15,13 @@ export const updateBotOutput = (argAnswer,argContext) => {
         if ( outUpdated.entities && outUpdated.entities.length>0 ){
             outUpdated.entities.forEach((elem)=>{
                 let textAnswer = (outUpdated.answer && elem.entity && outUpdated.answer.text) ?  outUpdated.answer.text : false ;
-                if ( textAnswer && textAnswer.indexOf(elem.entity)!=-1 ){
-                    let entityVal  = elem.utteranceText ;
-                    outUpdated.answer.text = outUpdated.answer.text.replace(`##${elem.entity}##`,entityVal) ;
+                if ( textAnswer && textAnswer.toUpperCase().indexOf(elem.entity.toUpperCase())!=-1 ){
+                    let entityVal      = elem.utteranceText ;
+                    let arrayVariables = textAnswer.match( /\##(.*?)\##/g ) ;
+                    arrayVariables.forEach((elemEntity)=>{
+                        outUpdated.answer.text = outUpdated.answer.text.replace( elemEntity , elemEntity.toUpperCase() ) ;
+                    }) ;
+                    outUpdated.answer.text = outUpdated.answer.text.replace( elem.entity , entityVal ) ;
                 }
             }) ;
         }
