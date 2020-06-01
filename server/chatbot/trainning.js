@@ -136,35 +136,37 @@ export const trainAsistente = ( argOptions ) => {
                     manager.chatEvents[ objTrain.name ] = objTrain ;
                 }
                 //
-                objTrain.examples.forEach((elemExample)=>{
-                    try {
-                        if ( elemExample && elemExample!=null ){
-                            if ( elemExample.indexOf('##')!=-1 ){
-                                let resuAddVar = addTrimmedVariables(manager,objTrain.entity,tempLanguage,elemExample) ;
-                                elemExample = resuAddVar.text ;
+                if ( objTrain.name.toUpperCase()!="NONE" ){
+                    objTrain.examples.forEach((elemExample)=>{
+                        try {
+                            if ( elemExample && elemExample!=null ){
+                                if ( elemExample.indexOf('##')!=-1 ){
+                                    let resuAddVar = addTrimmedVariables(manager,objTrain.entity,tempLanguage,elemExample) ;
+                                    elemExample = resuAddVar.text ;
+                                }
+                                manager.addDocument( tempLanguage , elemExample , objTrain.entity );
                             }
-                            manager.addDocument( tempLanguage , elemExample , objTrain.entity );
+                        } catch(errADDd){
+                            console.log('....ERROR: addDocumento:: train:: errADDd: ',errADDd,' \n objTrain: ',objTrain) ;
                         }
+                    }) ;
+                    // Slots Filling
+                    try {
+                        // console.log('.1_objTrain.entity: ',objTrain.entity,' objTrain.slots: ',objTrain.slots) ;
+                        if ( objTrain.slots && objTrain.slots.length>0 ){
+                            for ( let posS=0; posS<objTrain.slots.length; posS++ ){
+                                addSlotToBot( manager , objTrain.entity , objTrain.slots[posS] ) ;
+                            }
+                        }
+                    } catch(errAS){
+                        console.log('...errAS: ',errAS) ;
+                    }
+                    //
+                    try {
+                        manager.addAnswer( tempLanguage , objTrain.entity , objTrain.answer );
                     } catch(errADDd){
-                        console.log('....ERROR: addDocumento:: train:: errADDd: ',errADDd,' \n objTrain: ',objTrain) ;
+                        console.log('....ERROR: addAnswer:: train:: errADDd: ',objTrain) ;
                     }
-                }) ;
-                // Slots Filling
-                try {
-                    // console.log('.1_objTrain.entity: ',objTrain.entity,' objTrain.slots: ',objTrain.slots) ;
-                    if ( objTrain.slots && objTrain.slots.length>0 ){
-                        for ( let posS=0; posS<objTrain.slots.length; posS++ ){
-                            addSlotToBot( manager , objTrain.entity , objTrain.slots[posS] ) ;
-                        }
-                    }
-                } catch(errAS){
-                    console.log('...errAS: ',errAS) ;
-                }
-                //
-                try {
-                    manager.addAnswer( tempLanguage , objTrain.entity , objTrain.answer );
-                } catch(errADDd){
-                    console.log('....ERROR: addAnswer:: train:: errADDd: ',objTrain) ;
                 }
             }
             //
