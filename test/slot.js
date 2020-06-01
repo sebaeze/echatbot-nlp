@@ -1,8 +1,9 @@
 /*
 *   conditions.push(`(?<=${leftWord})(.*)(?=${rightWord})`);
 */
-const { NlpManager, ConversationContext  }               = require('node-nlp')      ;
-const { SimilarSearch } = require('node-nlp');
+const { NlpManager, NlgManager, ConversationContext  }               = require('node-nlp')      ;
+const { SimilarSearch } = require('node-nlp') ;
+const request           = require('request')  ;
 console.log('...SimilarSearch: ',SimilarSearch) ;
 /*
 const { SlotManager } = require('@nlpjs/slot');
@@ -78,25 +79,41 @@ main = async () => {
     // argMng.addBetweenCondition(   'es' , 'miNombre', 'mi nombre es', ',|$|\n|\r' /* , { skip: ['tu.nombre'] } */ ) ;
     // argMng.addBetweenCondition(   'es' , 'miNombre', 'mi nombre es', '\s'  ) ;
     // argMng.addBetweenCondition(   'es' , 'miNombre', 'mi nombre es', 'abcde'  ) ;
-    let varBus  = 'nombre es' ;
-    let stregex = `/(?<=${varBus})(.*?)(?=(,|$|\n|\r))/ig` ;
-    console.log('...stregex: ',stregex,';') ;
-    argMng.addRegexEntity( 'miNombre', 'es', stregex ) ;
-    argMng.nlp.slotManager.addSlot( 'tu.nombre' , 'miNombre',  true , {'es':'¿ Cual es su nombre ?'} ) ;
+   //
+    let varBus  = 'soy el ' ;
+    // let stregex = `/(?<=${varBus})(.*?)(?=(,|$|\n|\r))/ig` ;
+    let stregex = `/(?<=${varBus}).*?(?=\s)/ig` ;
+    // console.log('...stregex: ',stregex,';') ;
+    argMng.addRegexEntity( '##MINOMBRE##' , 'es', stregex ) ;
+    // argMng.addBeforeCondition( 'es', '##MINOMBRE##', ' el ', {} ) ;
+    argMng.nlp.slotManager.addSlot( 'tu.nombre' , '##MINOMBRE##',  true , {'es':'¿ Cual es su nombre ?'} ) ;
     /*
     argMng.addBetweenCondition(   'es' , 'tu.ciudad', 'llama' , 'aca' );
     argMng.addAfterLastCondition( 'es' , 'tu.ciudad', 'llama' ) ;
     argMng.nlp.slotManager.addSlot( 'tu.ciudad', 'userCiudad' , true, {'es':'donde?'} ) ;
     */
-    argMng.addDocument( 'es' , 'mi nombre es' , 'tu.nombre'  ) ;
-    argMng.addDocument( 'es' , 'mi nombre es %miNombre% abcde' , 'tu.nombre' ) ;
-    argMng.addAnswer(   'es' , 'tu.nombre' , 'holaa ##miNombre## ' );
-    //
-    argMng.addAction('tu.nombre', 'getNombre', '', (input) => {
-        console.log('....getNommmm:: input: ',input,';') ;
-        return input ;
-        // return `${input.answer} sunny` ;
+    argMng.addDocument( 'es' , 'soy el' , 'tu.nombre'  ) ;
+    argMng.addDocument( 'es' , 'soy el ##MINOMBRE## ' , 'tu.nombre' ) ;
+    argMng.addAnswer(   'es' , 'tu.nombre' , 'holaa ##MINOMBRE## ' );
+    /*
+    argMng.addAction('tu.nombre', 'getNombre', 'es lo q hay', (input) => {
+        return new Promise(function(respOk,respRech){
+            try {
+                //
+                request.get({url: 'http://dummy.restapiexample.com/api/v1/employees', json: true }, function(error, response, body) {
+                    if ( error ) {
+                        console.log('....request:ERROR: ',error) ;
+                    } else {
+                        console.log(body);
+                    }
+                    respOk( input ) ;
+                  }) ;
+            } catch(errAA){
+                respRech(errAA) ;
+            }
+        }.bind(this)) ;
     });
+    */
     //
     //argMng.addDocument( 'es' , 'mi nombre es  %miNombre% aca' , 'tu.nombre' ) ;
     // argMng.addAnswer(   'es' , 'chau' , '...tu estas en {{userCiudad}} ...' );
@@ -107,12 +124,19 @@ main = async () => {
     // const result1 = await argMng.process('es', 'mi nombre es', context);
     //console.log('....(A) context: ',context) ;
     // const result1 = await argMng.process('es', 'mi nombre es sebastian abcde que se yo #' , context);
-    const result1 = await argMng.process('es', 'mi nombre es sebastian' , context);
+    const result1 = await argMng.process('es', 'soy el sebastian' , context);
+    console.log('\n ...result1: ',result1,';') ;
+    //
+    /*
+    console.log('..getActions: ', argMng.nlp.getActions('tu.nombre')) ;
+    const result3 = argMng.findAllAnswers( 'es', 'tu.nombre', {}, {} ) ;
+    console.log('\n ...result3: ',result3,';') ;
+    */
     // console.log('...resu111: ', replaceVariables(result1),';' ) ;
     // console.log('.......slotFill: ',result1.slotFill.entities,';') ;
     // console.log('....(A) context: ',context) ;
     //
-    console.log('.......result1: ',replaceVariables(result1),';') ;
+    // console.log('.......result1: ',replaceVariables(result1),';') ;
     /*
     const result2 = await argMng.process('es', 'sebastiannnn', context);
     console.log('.......result2: ',replaceVariables(result2),';') ;

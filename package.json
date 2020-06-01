@@ -7,6 +7,7 @@
     "build": "webpack  --mode production --config ./build_config/webpack.react.prod.js",
     "build:prod": "export AMBIENTE=produccion && export URL_BACKEND=https://www.waiboc.com:3001 && webpack  --mode production --config ./build_config/webpack.react.prod.js",
     "postinstall": "npm install git+ssh://git@github.com/sebaeze/echatbot-mongodb.git",
+    "start:dev": "SET DEBUG=WAIBOC:* && babel-node ./server/server.js",
     "start": "babel-node ./server/server.js",
     "start:react": "webpack-dev-server              --config ./build_config/webpack.react.dev.js"
   },
@@ -54,6 +55,7 @@
     "react-chat-widget": "^2.1.5",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
+    "request": "^2.88.2",
     "style-loader": "^0.23.1",
     "url-loader": "^2.0.0",
     "waiboc-widget-react": "^1.0.28",

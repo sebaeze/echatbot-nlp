@@ -2,15 +2,17 @@
 *
 */
 const router                    = require('express').Router()   ;
-import { userNavigator }        from '@sebaeze/echatbot-mongodb' ;
 import { assistantManager, validateChatbotAgent }     from '../chatbot/chatbot' ;
-import { updateBotOutput, EOF_LINE }                  from '../chatbot/chatbot' ;
+// import { updateBotOutput, EOF_LINE }                  from '../chatbot/chatbot' ;
+import { responseChatbot }                            from './responses/responseChatbot'  ;
 //
 module.exports = (argConfig,argDb) => {
     //
     let API_NLP = argConfig.API[process.env.AMBIENTE||'dev'] || false ;
     //
     const chatbotAsistente = assistantManager(argDb) ;
+    const respBot          = responseChatbot(argConfig,argDb,chatbotAsistente) ;
+    //
     router.all('/:seccion', function(req,res,next){
         /*
         *  Este paso funciona para que la comunicacion entre front -> backend no falle por error de CORS
@@ -24,14 +26,10 @@ module.exports = (argConfig,argDb) => {
         //
     }) ;
     //
+    router.post( '/mensaje' , respBot.message ) ;
+    /*
     router.post('/mensaje', function(req,res){
       try {
-        //
-        res.set('access-Control-Allow-Origin'  , '*');
-        res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'content-type');
-        res.setHeader("Access-Control-Allow-Credentials", true);
-        //
         let answerBot        = false ;
         let asistenteChatbot = {} ;
         chatbotAsistente.get( req.body.idAgente )
@@ -48,7 +46,6 @@ module.exports = (argConfig,argDb) => {
           })
           .then((resuBot)=>{
             //
-            // console.log('....resuBot: ',resuBot,' conext:: ',asistenteChatbot.context) ;
             if ( Array.isArray(resuBot) && resuBot.length>0 ){ resuBot=resuBot[0];   } ;
             if ( !resuBot.intent && resuBot.entity ){ resuBot.intent=resuBot.entity; } ;
             //
@@ -85,19 +82,18 @@ module.exports = (argConfig,argDb) => {
             return argDb.chatbot.incrementChatbotUsage( objUpdater ) ;
           })
           .then((resuQty)=>{
-            /* */
           })
           .catch(err => {
             console.log(err)
             res.status(500) ;
             res.json( err ) ;
           });
-        //
       } catch(errMsg){
         res.status(500) ;
         res.json(errMsg) ;
       }
     }) ;
+    */
     //
     router.post('/retrain', function(req,res){
       try {
