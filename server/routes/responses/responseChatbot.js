@@ -1,7 +1,7 @@
 /*
 *
 */
-import { updateBotOutput, EOF_LINE }           from '../../chatbot/trainning' ;
+import { updateBotOutput, EOF_LINE }           from '../../chatbot/training ;
 import { userNavigator }                       from '@sebaeze/echatbot-mongodb/dist/modelos/schemaConversations' ;
 //
 const log = require('debug')('WAIBOC:responseBot') ;

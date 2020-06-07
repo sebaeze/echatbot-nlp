@@ -1,6 +1,7 @@
 //
 const { NlpManager, ConversationContext  }              = require('node-nlp')      ;
-const log = require('debug')('WAIBOC:trainning') ;
+const log = require('debug')('WAIBOC:Training') ;
+//
 export const EOF_LINE =  " __EOF_LINE__" ;
 //
 export const updateBotOutput = (argAnswer,argChatbotAgent /* argContext */ ) => {
@@ -62,8 +63,8 @@ const addTrimmedVariables = (argMng,argEntity,argLang,argText) => {
             elemVar = elemVar.toUpperCase() ;
             if ( elemVar.substr(0,2)!="##" ){ elemVar="##"+elemVar; }
             if ( elemVar.substr((elemVar.length-2),2)!="##" ){ elemVar=elemVar+"##"; }
-            //
-            argText = argText.replace(elemVar,elemVar.toUpperCase()) ;
+            // Hay que remover el slot del entrenamiento para evitar falsos positivos en NLP
+            argText = argText.replace(elemVar," ") ;
             outResult.text = argText ;
             elemVar = elemVar.toUpperCase() ;
             //
