@@ -1,9 +1,8 @@
 /*
 *
 */
-const router                    = require('express').Router()   ;
+const router                                          = require('express').Router()   ;
 import { assistantManager, validateChatbotAgent }     from '../chatbot/chatbot' ;
-// import { updateBotOutput, EOF_LINE }                  from '../chatbot/chatbot' ;
 import { responseChatbot }                            from './responses/responseChatbot'  ;
 //
 module.exports = (argConfig,argDb) => {
@@ -105,7 +104,7 @@ module.exports = (argConfig,argDb) => {
         //
         if ( API_NLP.NLP_TRAIN_SECRET==req.body.secretAPInlp ){
           console.log('....reTrain de id: ',req.body.idAgente) ;
-          chatbotAsistente.get( req.body.idAgente, true )
+          chatbotAsistente.get( req.body.idAgente, false ,true )
           .then((asistenteChatbot)=>{
             res.json({
               code: 0,

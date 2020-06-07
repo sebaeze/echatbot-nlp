@@ -1,7 +1,7 @@
 /*
 *
 */
-import { updateBotOutput, EOF_LINE }           from '../../chatbot/training ;
+import { updateBotOutput, EOF_LINE }           from '../../chatbot/training' ;
 import { userNavigator }                       from '@sebaeze/echatbot-mongodb/dist/modelos/schemaConversations' ;
 //
 const log = require('debug')('WAIBOC:responseBot') ;
@@ -49,12 +49,11 @@ export const responseChatbot = (argConfig,argDb,argBotManager) => {
             try {
                 let answerBot        = false ;
                 let chatbotAgent = {} ;
-                argBotManager.get( req.body.idAgente )
+                argBotManager.get( req.body.idAgente, req.body.idConversation )
                   .then((respBotAsistente)=>{
                     chatbotAgent = respBotAsistente ;
                     log('..(A) chatbotAgent.context: ',chatbotAgent.context) ;
                     if ( req.body.input.intent ){
-                        // return argDb.intents.qry({idChatbot: req.body.idAgente, entity: req.body.input.intent, campos: {idChatbot:1,answer:1,entity:1,} }) ;
                         return getAnswerFromIntent( chatbotAgent, argDb, req.body.input.intent ) ;
                     } else {
                         return chatbotAgent.nlp.process( chatbotAgent.language , req.body.input.text+EOF_LINE , chatbotAgent.context ) ;
@@ -86,7 +85,8 @@ export const responseChatbot = (argConfig,argDb,argBotManager) => {
                     return  argDb.conversacion.add(
                       req.body.idAgente,
                       tempUserNavigator,
-                      { _id: req.body._id ? req.body._id : false, userMessage: req.body.input, answer: tempRespuesta, intent: resuBot.intent,domain: resuBot.domain }
+                      { _id: req.body._id ? req.body._id : false, userMessage: req.body.input, answer: tempRespuesta, intent: resuBot.intent,domain: resuBot.domain },
+                      chatbotAgent.context
                     ) ;
                   })
                   .then((resuAnswer)=>{
@@ -101,7 +101,7 @@ export const responseChatbot = (argConfig,argDb,argBotManager) => {
                     return argDb.chatbot.incrementChatbotUsage( objUpdater ) ;
                   })
                   .then((resuQty)=>{
-                    argBotManager.update( req.body.idAgente, chatbotAgent.context )
+                    argBotManager.update( req.body.idAgente, req.body.idConversation, chatbotAgent.context )
                   })
                   .catch(err => {
                     console.log(err)

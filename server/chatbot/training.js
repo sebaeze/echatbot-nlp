@@ -24,18 +24,16 @@ export const updateBotOutput = (argAnswer,argChatbotAgent /* argContext */ ) => 
         }
         //
         if ( outUpdated.answer && outUpdated.answer.text && outUpdated.answer.text.indexOf('##')!=-1 ){
-            for ( let keyCtx in argChatbotAgent.context ){
-                let textVar = argChatbotAgent.context[keyCtx] || '' ;
-                if ( textVar.length>0 ){
-                    if ( outUpdated.answer.text.toUpperCase().indexOf(keyCtx)>-1 ){
-                        let arrayVariables = outUpdated.answer.text.match( /\##(.*?)\##/g ) ;
-                        arrayVariables.forEach((elemVar)=>{
-                            outUpdated.answer.text = outUpdated.answer.text.replace(elemVar,elemVar.toUpperCase()) ;
-                        }) ;
-                        outUpdated.answer.text = outUpdated.answer.text.replace( keyCtx , textVar ) ;
-                    }
-                }
+            let arrayVariables = outUpdated.answer.text.match( /\##(.*?)\##/g ) ;
+            //
+            for ( let posS=0; posS<arrayVariables.length; posS++ ){
+                let slotVar    = arrayVariables[ posS ] ;
+                let contextVal = argChatbotAgent.context[ slotVar.toUpperCase() ] || "" ;
+                outUpdated.answer.text = outUpdated.answer.text.replace( slotVar , slotVar.toUpperCase() ) ;
+                outUpdated.answer.text = outUpdated.answer.text.replace( slotVar.toUpperCase() , contextVal ) ;
+                console.log('...slotVar: ',slotVar,' contextVal: ',contextVal,' text: ',outUpdated.answer.text,';') ;
             }
+            //
         }
         //
         if ( outUpdated && outUpdated.answer && outUpdated.answer.text){
@@ -48,7 +46,6 @@ export const updateBotOutput = (argAnswer,argChatbotAgent /* argContext */ ) => 
         throw errRV ;
     }
 }
-//
 //
 const addTrimmedVariables = (argMng,argEntity,argLang,argText) => {
     let outResult = {text: argText} ;
@@ -108,7 +105,6 @@ export const trainAsistente = ( argOptions ) => {
     return new Promise(function(respOk,respRech){
         try {
             const { intents, chatbotLanguage } = argOptions ;
-            const context = new ConversationContext() ;
             const manager = new NlpManager({
                             languages: ['es', 'en', 'pt'],
                             nlu: { log: false, useNoneFeature: true }
@@ -173,11 +169,10 @@ export const trainAsistente = ( argOptions ) => {
             //
             manager.train()
                 .then((respTrain)=>{
-                    console.log('....termino de entrenar') ;
+                    log('trainAsistente:: Termino de entrenar') ;
                     respOk({
                         nlp: manager,
-                        language: chatbotLanguage,
-                        context: context
+                        language: chatbotLanguage
                     }) ;
                 })
                 .catch((respErr)=>{

@@ -4,33 +4,106 @@
 //
 import { userNavigator }                                from '@sebaeze/echatbot-mongodb'     ;
 import { VARIABLES_GLOBALES }                           from '../dataModel/globals' ;
-import { trainAsistente }                               from './trainning' ;
+import { trainAsistente }                               from './training' ;
 //
-const log = require('debug')('WAIBOC:Chatbot') ;
-const cacheSessiones   = {} ;
+const { ConversationContext } = require('node-nlp')      ;
+//
+const CACHE_CONTEXT    = {} ;
+const CACHE_CHATBOTS   = {} ;
+//
+const log          = require('debug')('WAIBOC:Chatbot') ;
+const existInCache = (argId,argFlag) => {
+    return new Promise(function(resOk,resRech){
+        let outFlag = false ;
+        if ( CACHE_CHATBOTS[argId] && argFlag==false ){
+            outFlag = true ;
+        }
+        resOk(outFlag);
+    });
+} ;
 //
 export const assistantManager = (argDb) => {
     //
-    const getChatbotAgent = (argIdAgente,argflagForzarTraining=false) => {
+    const initChatbotManager = (argIdChatbot,argIdConversation) => {
         return new Promise(function(respOk,respRech){
             try {
-                if ( cacheSessiones[argIdAgente] && argflagForzarTraining==false ){
-                    let cacheAsistente = cacheSessiones[argIdAgente] ;
+                //
+                argDb.chatbot.qry({ _id: argIdChatbot, camposTraining:{_id:1,idChatbot:1,name:1,systemDefined:1,domain:1,examples:1,entity:1,answer:1, slots:1} })
+                    .then((respAsis)=>{
+                        if ( respAsis.length>0 ){ respAsis=respAsis[0]; }
+                        if ( !respAsis.training ){ respAsis.training=false; }
+                        return trainAsistente({ intents: respAsis.training, chatbotLanguage: respAsis.language }) ;
+                    })
+                    .then((resTrained)=>{
+                        CACHE_CHATBOTS[argIdChatbot]      = resTrained ;
+                        respOk( resTrained ) ;
+                        /*
+                            context: CACHE_CONTEXT[argIdConversation]
+                        }) ;
+                        */
+                    })
+                    .catch((respErr)=>{
+                        console.log('....ERROR: assistantManager:: getChatbotAgent: ',respErr) ;
+                        respRech(respErr) ;
+                    }) ;
+                //
+            } catch(respRech){
+                log('ERROR: ',erriCM) ;
+                respRech(erriCM) ;
+            }
+        }) ;
+    } ;
+    //
+    const getChatbotAgent = (argIdAgente,argIdConversation,argflagForzarTraining=false) => {
+        return new Promise(function(respOk,respRech){
+            try {
+                //
+                existInCache(argIdAgente,argflagForzarTraining)
+                    .then((botExist)=>{
+                        log('....botExist: ',botExist) ;
+                        if ( botExist==true ){
+                            let outBotMng     = CACHE_CHATBOTS[argIdAgente] ;
+                            outBotMng.context = CACHE_CONTEXT[argIdConversation] ;
+                            return outBotMng ;
+                        } else {
+                            return initChatbotManager(argIdAgente,argIdConversation) ;
+                        }
+                    })
+                    .then((botTrained)=>{
+                        log('...botTrained: ',botTrained) ;
+                        if ( !CACHE_CONTEXT[argIdConversation] ){ CACHE_CONTEXT[argIdConversation]=new ConversationContext(); }
+                        respOk({
+                            ...botTrained,
+                            context: CACHE_CONTEXT[argIdConversation]
+                         }) ;
+                    })
+                    .catch((respErr)=>{
+                        console.log('....ERROR: assistantManager:: getChatbotAgent: ',respErr) ;
+                        respRech(respErr) ;
+                    }) ;
+                /*
+                if ( CACHE_CHATBOTS[argIdAgente] && argflagForzarTraining==false ){
+                    let cacheAsistente = CACHE_CHATBOTS[argIdAgente] ;
+                    log('getChatbotAgent:: cacheAsistente: ',cacheAsistente) ;
+                    cacheAsistente.context = CACHE_CONTEXT[argIdConversation] ;
                     respOk( cacheAsistente ) ;
                 } else {
-                    cacheSessiones[argIdAgente] = {} ;
+                    CACHE_CHATBOTS[argIdAgente] = {} ;
                     argDb.chatbot.qry( {_id: argIdAgente, camposTraining:{_id:1,idChatbot:1,name:1,systemDefined:1,domain:1,examples:1,entity:1,answer:1, slots:1} } )
                         .then((respAsis)=>{
                             if ( respAsis.length>0 ){ respAsis=respAsis[0]; }
                             if ( !respAsis.training ){ respAsis.training=false; }
-                            cacheSessiones[argIdAgente] = trainAsistente({ intents: respAsis.training, chatbotLanguage: respAsis.language }) ;
-                            respOk( cacheSessiones[argIdAgente] ) ;
+                            let chatbotTrained = trainAsistente({ intents: respAsis.training, chatbotLanguage: respAsis.language }) ;
+                            CACHE_CHATBOTS[argIdAgente] = chatbotTrained ;
+                            chatbotTrained.context = CACHE_CONTEXT[argIdConversation] || {} ;
+                            respOk( chatbotTrained ) ;
                         })
                         .catch((respErr)=>{
                             console.log('....ERROR: assistantManager:: getChatbotAgent: ',respErr) ;
                             respRech(respErr) ;
                         }) ;
                 }
+                */
             } catch(errGetAs){
                 console.dir(errGetAs) ;
                 respRech(errGetAs) ;
@@ -38,14 +111,17 @@ export const assistantManager = (argDb) => {
         }.bind(this)) ;
     } ;
     //
-    const updateAsistenteContext = (argIdAgente,argContext=false) => {
+    const updateAsistenteContext = ( argIdAgente , argIdConversation , argContext=false ) => {
         return new Promise(function(respOk,respRech){
             try {
-                if ( argContext!=false && cacheSessiones[argIdAgente]  ){
-                    let cacheAsistente = cacheSessiones[argIdAgente] ;
-                    cacheAsistente.context      = argContext ;
-                    cacheSessiones[argIdAgente] = cacheAsistente ;
-                    log('....update context:: cacheSessiones[argIdAgente]: ',cacheSessiones[argIdAgente].context) ;
+                if ( argContext!=false ){
+                    //let cacheAsistente = CACHE_CHATBOTS[argIdAgente] ;
+                    if ( typeof argIdConversation!="string" || argIdConversation.length==0 ){ throw new Error('ERROR: Falta el id de la conversacion') ; }
+                    //if ( !cacheAsistente[argIdConversation] ){ cacheAsistente[argIdConversation]={}; }
+                    //cacheAsistente[argIdConversation] = argContext ;
+                    //CACHE_CHATBOTS[argIdAgente]       = cacheAsistente ;
+                    CACHE_CONTEXT[argIdConversation] = argContext ;
+                    log('....update context:: CACHE: ',CACHE_CONTEXT[argIdConversation]) ;
                     respOk({msg: `Asistente  ${argIdAgente} actualizado en cache.`}) ;
                 } else {
                     respOk({msg:`Asistente no existe ${argIdAgente} en cache.`}) ;
