@@ -10,7 +10,7 @@
     "start:dev": "SET DEBUG=WAIBOC:* && babel-node ./server/server.js",
     "start": "babel-node ./server/server.js",
     "start:react": "webpack-dev-server              --config ./build_config/webpack.react.dev.js",
-    "update:db":"npm update @sebaeze/echatbot-mongodb"
+    "update:db": "npm update @sebaeze/echatbot-mongodb"
   },
   "dependencies": {
     "@babel/core": "^7.4.5",

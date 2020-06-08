@@ -25,15 +25,12 @@ export const updateBotOutput = (argAnswer,argChatbotAgent /* argContext */ ) => 
         //
         if ( outUpdated.answer && outUpdated.answer.text && outUpdated.answer.text.indexOf('##')!=-1 ){
             let arrayVariables = outUpdated.answer.text.match( /\##(.*?)\##/g ) ;
-            //
             for ( let posS=0; posS<arrayVariables.length; posS++ ){
                 let slotVar    = arrayVariables[ posS ] ;
                 let contextVal = argChatbotAgent.context[ slotVar.toUpperCase() ] || "" ;
                 outUpdated.answer.text = outUpdated.answer.text.replace( slotVar , slotVar.toUpperCase() ) ;
                 outUpdated.answer.text = outUpdated.answer.text.replace( slotVar.toUpperCase() , contextVal ) ;
-                console.log('...slotVar: ',slotVar,' contextVal: ',contextVal,' text: ',outUpdated.answer.text,';') ;
             }
-            //
         }
         //
         if ( outUpdated && outUpdated.answer && outUpdated.answer.text){
@@ -93,7 +90,6 @@ const addSlotToBot = (argMng,argEntity,argSlot) => {
             text: argSlot.question ,
             files: []
         } ;
-        // log('.....(B) addSlotToBot: argEntity: ',argEntity,' argSlot.name: ',argSlot.name,';') ;
         argMng.nlp.slotManager.addSlot( argEntity, argSlot.name , true,  objSlot2Add ) ;
         //
     } catch(errADV){
@@ -104,17 +100,9 @@ const addSlotToBot = (argMng,argEntity,argSlot) => {
 export const trainAsistente = ( argOptions ) => {
     return new Promise(function(respOk,respRech){
         try {
+            //
             const { intents, chatbotLanguage } = argOptions ;
-            const manager = new NlpManager({
-                            languages: ['es', 'en', 'pt'],
-                            nlu: { log: false, useNoneFeature: true }
-                            /*
-                            processTransformer: function (originalProcessOutput) {
-                                let outUpdated = updateBotOutput( originalProcessOutput ) ;
-                                return outUpdated ;
-                            }
-                            */
-                        }) ;
+            const manager = new NlpManager({ languages: ['es', 'en', 'pt'], nlu: { log: false, useNoneFeature: true } }) ;
             //
             let tempArrayTrain = typeof intents=="object" ? Object.values(intents) : intents ;
             let tempEntity     = {} ;
