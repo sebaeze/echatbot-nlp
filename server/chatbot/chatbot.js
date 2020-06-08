@@ -43,6 +43,7 @@ export const assistantManager = (argDb) => {
                             resConversation={} ;
                         } else {
                             resConversation=resConversation[0];
+                            if ( !resConversation.context ){ resConversation.context={}; }
                         }
                         //
                         respOk({

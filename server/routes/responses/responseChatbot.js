@@ -15,7 +15,7 @@ export const responseChatbot = (argConfig,argDb,argBotManager) => {
             try {
                 // argDb.intents.qry({idChatbot: req.body.idAgente, entity: req.body.input.intent, campos: {idChatbot:1,answer:1,entity:1,} })
                 let intentAnwer = argMng.nlp.findAllAnswers( argMng.language , argIntent ) ;
-                console.log('....arginten: ',argIntent,' intentAnwer: ',intentAnwer) ;
+                log('....arginten: ',argIntent,' intentAnwer: ',intentAnwer) ;
                 //
                 let resultAnswer = {
                     locale: argMng.language ,utterance: '',languageGuessed: false,localeIso2: 'es',language: 'Spanish',
