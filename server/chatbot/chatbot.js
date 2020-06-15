@@ -36,7 +36,11 @@ export const assistantManager = (argDb) => {
                     })
                     .then((resTrained)=>{
                         CACHE_CHATBOTS[argIdChatbot]      = resTrained ;
-                        return argDb.conversacion.qry({ _id: argIdConversation , campos: ["_id","context"] }) ;
+                        if ( argIdConversation && argIdConversation!=false && argIdConversation!='false' ){
+                            return argDb.conversacion.qry({ _id: argIdConversation , campos: ["_id","context"] }) ;
+                        } else {
+                            return [] ;
+                        }
                     })
                     .then((resConversation)=>{
                         if ( resConversation.length==0 ){
@@ -126,7 +130,7 @@ export const getConversationIdChatlog = (argDb,argReq) => {
              if ( idChatbot      && idChatbot=='false' ){ idChatbot=false; }
              if ( idConversation && idConversation=='false' ){ idConversation=false; }
              //
-             if ( idConversation ){
+             if ( idConversation && idConversation!=false ){
                 argDb.conversacion.qry( {_id: idConversation} )
                     .then((respChatlog)=>{
                         if ( respChatlog.length && respChatlog.length>0 ){ respChatlog=respChatlog[0]; }
