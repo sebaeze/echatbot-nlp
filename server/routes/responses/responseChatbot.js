@@ -15,7 +15,6 @@ export const responseChatbot = (argConfig,argDb,argBotManager) => {
             try {
                 // argDb.intents.qry({idChatbot: req.body.idAgente, entity: req.body.input.intent, campos: {idChatbot:1,answer:1,entity:1,} })
                 let intentAnwer = argMng.nlp.findAllAnswers( argMng.language , argIntent ) ;
-                log('....arginten: ',argIntent,' intentAnwer: ',intentAnwer) ;
                 //
                 let resultAnswer = {
                     locale: argMng.language ,utterance: '',languageGuessed: false,localeIso2: 'es',language: 'Spanish',
@@ -28,7 +27,6 @@ export const responseChatbot = (argConfig,argDb,argBotManager) => {
                     answers: [],
                     answer: '',
                 } ;
-                console.log('...dbAnswer:  ',intentAnwer,';') ;
                 if ( Array.isArray(intentAnwer) && intentAnwer.length>0 ){
                     resultAnswer = Object.assign(resultAnswer,intentAnwer[0]);
                 } else {
@@ -52,7 +50,6 @@ export const responseChatbot = (argConfig,argDb,argBotManager) => {
                 argBotManager.get( req.body.idAgente, req.body.idConversation )
                   .then((respBotAsistente)=>{
                     chatbotAgent = respBotAsistente ;
-                    log('..(A) chatbotAgent.context: ',chatbotAgent.context) ;
                     if ( req.body.input.intent ){
                         return getAnswerFromIntent( chatbotAgent, argDb, req.body.input.intent ) ;
                     } else {
@@ -60,7 +57,6 @@ export const responseChatbot = (argConfig,argDb,argBotManager) => {
                     }
                   })
                   .then((outBotAns)=>{
-                    log('...outBotAns: ',outBotAns) ;
                     return updateBotOutput(outBotAns,chatbotAgent) ;
                   })
                   .then((resuBot)=>{
