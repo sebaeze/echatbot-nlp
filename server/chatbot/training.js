@@ -25,6 +25,7 @@ export const updateBotOutput = (argAnswer,argChatbotAgent /* argContext */ ) => 
         //
         if ( outUpdated.answer && outUpdated.answer.text && outUpdated.answer.text.indexOf('##')!=-1 ){
             let arrayVariables = outUpdated.answer.text.match( /\##(.*?)\##/g ) ;
+            if ( argChatbotAgent.context==undefined ){ argChatbotAgent.context={}; }
             for ( let posS=0; posS<arrayVariables.length; posS++ ){
                 let slotVar    = arrayVariables[ posS ] ;
                 let contextVal = argChatbotAgent.context[ slotVar.toUpperCase() ] || "" ;
